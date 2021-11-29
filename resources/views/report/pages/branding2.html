@@ -1,0 +1,46 @@
+<section class="container">
+	
+	<div class="page-content-container">
+		<div class="page-content-branding">
+
+			<div class="about-knolskape-products-container">
+				<%
+					for(let i = 6; i < products.length; i++) {
+				%>
+					<%- include('templates/productBox.html', {
+						descObj: products[i]
+					}) %>
+				<%}%>
+			</div>
+		</div>
+		<div class="page-bottom-bar-branding">
+			<div class="social-container">
+				<div class="saying-container">
+					<% if(lang=='tr'){ %>
+						<img class="quote-image" src="https://knolskape-website.s3.amazonaws.com/misc/arushi_jain/2021/06/14/13/quote-banner.png" />
+					<% }else{ %>
+						<img class="quote-image" src="https://knolskape-website.s3.amazonaws.com/misc/ujjwal_jain/2018/03/16/69/bottom_page_bg.png" />
+					<% } %>	
+				</div>
+				<div class="social-links-container">
+					<div>
+						<a href="https://www.facebook.com/KNOLSKAPE/"><img src="https://knolskape-website.s3.amazonaws.com/misc/sindhu_anandhakrishnan/2020/01/07/78/facebook.png" class="social-link-logo"/></a>
+					</div>
+					<div>
+						<a href="https://twitter.com/knolskape?lang=en"><img src="https://knolskape-website.s3.amazonaws.com/misc/sindhu_anandhakrishnan/2020/01/07/4/twitter.png" class="social-link-logo"/></a>
+					</div>
+					<div>
+						<a href="https://in.linkedin.com/company/knolskape"><img src="https://knolskape-website.s3.amazonaws.com/misc/sindhu_anandhakrishnan/2020/01/07/27/linked_in.png" class="social-link-logo"/></a>
+					</div>
+					<!-- <div>
+						<a href="https://plus.google.com/+knolskape"><img src="https://knolskape-website.s3.amazonaws.com/misc/sindhu_anandhakrishnan/2020/01/07/47/google_plus.png" class="social-link-logo"/></a>
+					</div> -->
+				</div>
+				<div class="copyright-container">
+					<%- new Date().getFullYear(); %> &copy; <%= labels['label_footer_report'] %>
+					<a href="https://www.knolskape.com/contact/" class="contact-share-link"><%= labels['label_contact_us'] %></a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

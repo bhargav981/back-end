@@ -1,0 +1,287 @@
+include:
+    - local: 'devops/.gitlab-ci-generic-build.yml'
+    - local: 'devops/.gitlab-ci-generic-deploy.yml'
+    - local: 'devops/.gitlab-ci-generic-db-migration.yml'
+
+stages:
+  - dev_build
+  - dev_deploy
+  - dev_db_migration
+  - stg_build
+  - stg_deploy
+  - stg_db_migration
+  - preprod_build
+  - preprod_deploy
+  - preprod_db_migration
+  - prod_build
+  - prod_deploy
+
+# Global Variables
+variables:
+    DOCKER_HOST: tcp://localhost:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+    IS_PRIVATE_CLUSTER: "true"
+    SENTRY_ORG: "knolskape"
+    SENTRY_PROJECT: "agile-be"
+    ENVIRONMENT_NAME: "preprod" # Override ENVIRONMENT_NAME manually only during prod build/deploy
+
+# Global Image used for all the jobs
+image: registry.knolskape.com/gitlab-ci/base-image:v1.2
+
+services:
+    - name: docker:19.03.0-dind
+      entrypoint: ["env", "-u", "DOCKER_HOST"]
+      command: ["dockerd-entrypoint.sh"]
+
+# Development Block
+gcp_dev_build:
+    stage: dev_build
+    variables:
+      APP_NAME: agile-api-app-dev
+      KUBE_CLUSTER_NAME: knolskape-dev-k8scluster
+      KUBE_NAMESPACE: simulations
+      GCP_REGION: asia-south1
+      GCP_REGISTRY_URL: asia.gcr.io/knol-dev-stg
+      DESIRED_TAG_NAME: $GCP_REGISTRY_URL/$APP_NAME:$CI_PIPELINE_ID
+      GCP_DEPLOYER_SERVICE_ACCOUNT: $DEV_GCP_DEPLOYER_SERVICE_ACCOUNT
+      GCP_ENV_FILE: $DEV_GCP_ENV_FILE
+    tags:
+      - devgitlabrunner
+    environment:
+      name: develop
+    only:
+      variables:
+        - $CI_COMMIT_REF_NAME == 'develop'
+    extends: .build_template
+
+gcp_dev_deploy:
+    stage: dev_deploy
+    needs:
+      - job: gcp_dev_build
+    variables:
+      APP_NAME: agile-api-app-dev
+      KUBE_CLUSTER_NAME: knolskape-dev-k8scluster
+      KUBE_NAMESPACE: simulations
+      DEPLOY_HPA: "false"
+      KUBE_ONDEMAND_REPLICA_COUNT: 1
+      KUBE_PREEMPTIBLE_REPLICA_COUNT: 0
+      GCP_REGION: asia-south1
+      GCP_REGISTRY_URL: asia.gcr.io/knol-dev-stg
+      KUBE_CONTAINER_APP_PORT: 3000
+      GCP_DEPLOYER_SERVICE_ACCOUNT: $DEV_GCP_DEPLOYER_SERVICE_ACCOUNT
+    tags:
+      - devgitlabrunner
+    environment:
+      name: develop
+    only:
+      variables:
+        - $CI_COMMIT_REF_NAME == 'develop'
+    extends: .deploy_template
+
+gcp_dev_db_migration:
+    stage: dev_db_migration
+    needs:
+      - job: gcp_dev_deploy
+    variables:
+      APP_NAME: agile-api-app-dev
+      KUBE_CLUSTER_NAME: knolskape-dev-k8scluster
+      KUBE_NAMESPACE: simulations
+      GCP_REGION: asia-south1
+      GCP_DEPLOYER_SERVICE_ACCOUNT: $DEV_GCP_DEPLOYER_SERVICE_ACCOUNT
+    tags:
+      - devgitlabrunner
+    environment:
+      name: develop
+    when: manual
+    only:
+      variables:
+        - $CI_COMMIT_REF_NAME == 'develop'
+    extends: .db_migration_template
+
+# Staging Block
+gcp_stg_build:
+    stage: stg_build
+    variables:
+      APP_NAME: agile-api-app-stg
+      KUBE_CLUSTER_NAME: knolskape-stg-k8scluster
+      KUBE_NAMESPACE: simulations
+      GCP_REGION: asia-south1
+      GCP_REGISTRY_URL: asia.gcr.io/knol-dev-stg
+      DESIRED_TAG_NAME: $GCP_REGISTRY_URL/$APP_NAME:$CI_PIPELINE_ID
+      GCP_DEPLOYER_SERVICE_ACCOUNT: $STG_GCP_DEPLOYER_SERVICE_ACCOUNT
+      GCP_ENV_FILE: $STG_GCP_ENV_FILE
+    tags:
+      - stggitlabrunner
+    environment:
+      name: staging
+    only:
+      variables:
+        - $CI_COMMIT_REF_NAME == 'staging'
+    extends: .build_template
+
+gcp_stg_deploy:
+    stage: stg_deploy
+    needs:
+      - job: gcp_stg_build
+    variables:
+      APP_NAME: agile-api-app-stg
+      KUBE_CLUSTER_NAME: knolskape-stg-k8scluster
+      KUBE_NAMESPACE: simulations
+      DEPLOY_HPA: "true"
+      KUBE_PREEMPTIBLE_MAX_CONTAINER: 3
+      KUBE_PREEMPTIBLE_MIN_CONTAINER: 1
+      KUBE_ONDEMAND_REPLICA_COUNT: 1
+      KUBE_PREEMPTIBLE_REPLICA_COUNT: 1
+      GCP_REGION: asia-south1
+      GCP_REGISTRY_URL: asia.gcr.io/knol-dev-stg
+      KUBE_CONTAINER_APP_PORT: 3000
+      GCP_DEPLOYER_SERVICE_ACCOUNT: $STG_GCP_DEPLOYER_SERVICE_ACCOUNT
+    tags:
+      - stggitlabrunner
+    environment:
+      name: staging
+    only:
+      variables:
+        - $CI_COMMIT_REF_NAME == 'staging'
+    extends: .deploy_template
+    
+gcp_stg_db_migration:
+    stage: stg_db_migration
+    needs:
+      - job: gcp_stg_deploy
+    variables:
+      APP_NAME: agile-api-app-stg
+      KUBE_CLUSTER_NAME: knolskape-stg-k8scluster
+      KUBE_NAMESPACE: simulations
+      GCP_REGION: asia-south1
+      GCP_DEPLOYER_SERVICE_ACCOUNT: $STG_GCP_DEPLOYER_SERVICE_ACCOUNT
+    tags:
+      - stggitlabrunner
+    environment:
+      name: staging
+    when: manual
+    only:
+      variables:
+        - $CI_COMMIT_REF_NAME == 'staging'
+    extends: .db_migration_template
+
+
+# PREPROD BLOCK
+preprod_build:
+  stage: preprod_build
+  variables:
+    APP_NAME:  agile-api-app-preprod
+    KUBE_CLUSTER_NAME: knolskape-preprod-cluster
+    KUBE_NAMESPACE: simulations
+    GCP_REGION: asia-southeast1
+    GCP_REGISTRY_URL: asia.gcr.io/knol-preprod
+    DESIRED_TAG_NAME: $GCP_REGISTRY_URL/$APP_NAME:$CI_PIPELINE_ID
+    GCP_DEPLOYER_SERVICE_ACCOUNT: $PREPROD_GCP_DEPLOYER_SERVICE_ACCOUNT
+    GCP_ENV_FILE: $PREPROD_GCP_ENV_FILE
+  tags:
+    - preprodgitlabrunner
+  environment:
+    name: preprod
+  only:
+    variables:
+      - $CI_COMMIT_REF_NAME == 'prod' && $ENVIRONMENT_NAME == "preprod"
+  extends: .build_template
+    
+preprod_deploy:
+  stage: preprod_deploy
+  needs:
+    - job: preprod_build
+  variables:
+    APP_NAME: agile-api-app-preprod
+    KUBE_CLUSTER_NAME: knolskape-preprod-cluster
+    KUBE_NAMESPACE: simulations
+    DEPLOY_HPA: "false"
+    KUBE_ONDEMAND_REPLICA_COUNT: 1
+    KUBE_PREEMPTIBLE_REPLICA_COUNT: 0
+    GCP_REGION: asia-southeast1
+    GCP_REGISTRY_URL: asia.gcr.io/knol-preprod
+    KUBE_CONTAINER_APP_PORT: 3000
+    GCP_DEPLOYER_SERVICE_ACCOUNT: $PREPROD_GCP_DEPLOYER_SERVICE_ACCOUNT
+    IS_PRIVATE_CLUSTER: "false"
+  tags:
+    - preprodgitlabrunner
+  environment:
+    name: preprod
+  only:
+    variables:
+      - $CI_COMMIT_REF_NAME == 'prod' && $ENVIRONMENT_NAME == "preprod"
+  extends: .deploy_template
+
+preprod_db_migration:
+  stage: preprod_db_migration
+  needs:
+    - job: preprod_deploy
+  variables:
+      APP_NAME: agile-api-app-preprod
+      KUBE_CLUSTER_NAME: knolskape-preprod-cluster
+      KUBE_NAMESPACE: simulations
+      GCP_REGION: asia-southeast1
+      GCP_DEPLOYER_SERVICE_ACCOUNT: $PREPROD_GCP_DEPLOYER_SERVICE_ACCOUNT
+      IS_PRIVATE_CLUSTER: "false"
+  tags:
+    - preprodgitlabrunner
+  environment:
+    name: preprod
+  only:
+    variables:
+      - $CI_COMMIT_REF_NAME == 'prod' && $ENVIRONMENT_NAME == "preprod"
+  extends: .db_migration_template
+
+
+# Prod Block
+prod_build:
+  stage: prod_build
+  variables:
+    APP_NAME: agile-api-app-prod
+    PREPROD_APP_NAME: agile-api-app-preprod
+    PREPROD_REGISTRY_URL: asia.gcr.io/knol-preprod
+    KUBE_CLUSTER_NAME: knolskape-preprod-cluster
+    KUBE_NAMESPACE: simulations
+    GCP_REGION: asia-southeast1
+    BUILD_FOR_PROD: "true"
+    GCP_REGISTRY_URL: asia.gcr.io/knol-prod
+    DESIRED_TAG_NAME: $GCP_REGISTRY_URL/$APP_NAME:$CI_PIPELINE_ID
+    GCP_DEPLOYER_SERVICE_ACCOUNT: $PROD_GCP_DEPLOYER_SERVICE_ACCOUNT
+    PREPROD_SERVICE_ACCOUNT : $PREPROD_GCP_DEPLOYER_SERVICE_ACCOUNT
+    GCP_ENV_FILE: $PROD_GCP_ENV_FILE
+  tags:
+    - prodgitlabrunner
+  environment:
+    name: prod
+  only:
+    variables:
+      - $CI_COMMIT_REF_NAME == 'prod' && $ENVIRONMENT_NAME == "prod"
+  extends: .build_template
+
+prod_deploy:
+  stage: prod_deploy
+  needs:
+    - job: prod_build
+  variables:
+    APP_NAME: agile-api-app-prod
+    KUBE_CLUSTER_NAME: knolskape-prod-cluster
+    KUBE_NAMESPACE: simulations
+    DEPLOY_HPA: "true"
+    KUBE_PREEMPTIBLE_MAX_CONTAINER: 5
+    KUBE_PREEMPTIBLE_MIN_CONTAINER: 1
+    KUBE_ONDEMAND_REPLICA_COUNT: 1
+    KUBE_PREEMPTIBLE_REPLICA_COUNT: 1
+    GCP_REGION: asia-southeast1
+    GCP_REGISTRY_URL: asia.gcr.io/knol-prod
+    KUBE_CONTAINER_APP_PORT: 3000
+    GCP_DEPLOYER_SERVICE_ACCOUNT: $PROD_GCP_DEPLOYER_SERVICE_ACCOUNT
+    IS_PRIVATE_CLUSTER: "false"
+  tags:
+    - prodgitlabrunner
+  environment:
+    name: prod
+  only:
+    variables:
+      - $CI_COMMIT_REF_NAME == 'prod' && $ENVIRONMENT_NAME == "prod"
+  extends: .deploy_template

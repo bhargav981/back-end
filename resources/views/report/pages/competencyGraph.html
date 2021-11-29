@@ -1,0 +1,144 @@
+<!-- Setting up data for the graph -->
+<%
+	let graphData = competencyData.graphData;
+
+	let xAxisLabels = [];
+    let data = [];
+    let yAxisScaleLabel = labels[competencyData.graphAxisLabels.find(p=>p.axis==='Y').name]
+    let xAxisScaleLabel = labels[competencyData.graphAxisLabels.find(p=>p.axis==='X').name]
+
+    for(let i=0;i< graphData.length;i++) {
+            xAxisLabels.push(i);
+            data.push(graphData[i])   
+    }
+%>
+
+<!-- Report page code -->
+<section class="container competency-container">
+    <div class="heading">
+        <%= labels[competencyData.name] %>
+    </div>
+    <div class="comp-hr-line-heading"></div>
+    <div class="comp-graph">
+        <canvas id="competencyLineGraph-<%= id %>" width="520" height="188"></canvas>	
+    </div>
+    <div class="comp-description">
+        <span class="comp-desc-label"><%= labels[competencyData.descriptionLabel] %> : </span>
+        <span class="comp-desc-text"><%= labels[competencyData.graphDesc] %></span>
+    </div>
+    <div class="comp-insight-box">
+        <div class="comp-insight-img-box">
+            <img class="comp-insight-img" src="https://knolskape-website.s3.amazonaws.com/misc/suyog_patil/2019/06/25/9/insights.png"></img>
+            <div class="comp-insight-label"><%= labels[competencyData.insightLabel] %>!</div>
+        </div>
+        <div class="comp-insight-text-box">
+            <%= labels[competencyData.insightText] %>
+        </div>
+    </div>
+</section>
+
+<!-- Code for graph -->
+<script>
+	var defaultTicks = {
+		fontColor: 'rgba(0, 0, 0, 0.7)',
+		fontFamily: 'Open Sans',
+		fontSize: 10
+    };
+
+	var xAxisLabels = <%-JSON.stringify(xAxisLabels);%>;
+    var data = <%-JSON.stringify(data);%>;
+    var yAxisScaleLabel = <%-JSON.stringify(yAxisScaleLabel);%>;
+    var xAxisScaleLabel = <%-JSON.stringify(xAxisScaleLabel);%>;
+
+    var graphIdName="competencyLineGraph-"+<%=id%>;
+
+    var ctx = document.getElementById(graphIdName).getContext('2d');
+
+    //adding gradient
+    var gradient = ctx.createLinearGradient(0, 0, 0, 160);
+    gradient.addColorStop(0, 'rgba(255, 30, 80, 0.8)');
+    gradient.addColorStop(1, 'rgba(255, 30, 80, 0)');
+
+	var myChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: xAxisLabels,
+			datasets: [{
+                data: data,
+                backgroundColor: gradient,
+				fill: 'origin',
+				lineTension: 0,
+				borderColor: 'rgba(255, 30, 80, 1)',
+				borderWidth: '2'
+			}]
+        },
+        
+		options: {
+			legend: {
+				display: false
+            },
+            elements: {
+                point:{
+                    radius: 0
+                }
+            },
+			scales: {
+				yAxes: [{
+					ticks: {
+						...defaultTicks,
+						suggestedMin: 0,
+						suggestedMax: 10,
+						stepSize: 2,
+						padding: 1,
+						callback: function (value, index, values) {
+							return value;
+						}
+					},
+					gridLines: {
+						color: 'rgba(0, 0, 0, 0.06)',
+						zeroLineColor: 'rgba(0, 0, 0, 0.06)',
+						drawBorder: false
+					},
+					scaleLabel: {
+						display: true,
+						labelString: yAxisScaleLabel,
+                        fontColor: '#031a20CC',
+						fontFamily: 'Open Sans',
+                        fontStyle:600,
+						fontSize: 10,
+						padding: {
+							bottom: 10
+						}
+					}
+				}],
+				xAxes: [{
+					ticks: {
+						...defaultTicks,
+						callback: function (value, index, values) {
+                            if (value == '0') {
+								return '';
+							}
+							return value;
+						}
+					},
+					gridLines: {
+						display: true,
+						color: 'rgba(0, 0, 0, 0.06)',
+						zeroLineColor: 'white'
+					},
+					scaleLabel: {
+						display: true,
+						labelString: xAxisScaleLabel,
+                        fontColor: '#031a20CC',
+						fontFamily: 'Open Sans',
+                        fontSize: 10,
+                        fontStyle:600,
+						padding: {
+							bottom: 10
+						}
+					}
+				}],
+			}
+		}
+	});
+</script>

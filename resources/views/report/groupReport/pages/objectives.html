@@ -1,0 +1,76 @@
+<!-- Setting up data for the graph -->
+<section class="container">
+    <div class="heading">
+        <%= labels['label_group_agile_objectives_title'] %>
+    </div>
+    <div class="hr-line-heading"></div>
+    <div class="objective-padding"></div>
+    <div class="objective-details">
+        <%= labels['label_group_agile_objectives_desc'] %>            
+    </div>
+    <div class="objective">
+        
+        <div class="agile-leader-content">
+            <div class="agile-leader-heading"><%= labels['label_group_product_cust_fit_title'] %></div>
+            <div class="hr-line-agile-leader-subheading"></div>
+        </div>
+        
+        <div class="objective-details">
+            <%= labels['label_group_product_cust_fit_desc'] %>            
+        </div>
+        <div class="objective-1-visual">
+            <div class="objective-label-text">0</div>
+            <% let progressBarWidth=1.64*pa.value; %>
+            <div class="objective-1-background">
+                <div class="objective-1-progress" style="width:<%=progressBarWidth%>px"></div>
+                <div class="objective-1-progress-value" style="left:<%=progressBarWidth - 8 %>px"><%= pa.value %>%</div> 
+                <div class="objective-1-progress-vr-line" style="left:<%=progressBarWidth%>px"></div>
+                <div class="objective-1-target-text" style="right:-16px"><%= labels['label_group_pa_target'] %></div> 
+                <div class="objective-1-target-vr-line" style="right:0px"></div>
+            </div>
+            <div class="objective-label-text">100</div>
+        </div>
+    </div>
+
+
+    <div class="graph-container-group">
+        <div class="agile-leader-content">
+            <div class="agile-leader-heading"><%= labels['label_group_cust_fit_spread_title'] %></div>
+            <div class="hr-line-agile-leader-subheading"></div>
+        </div>
+        <div class="display-flex-graph">
+            <div class="pa-graph graph-space">
+                <%- include('../templates/verticalGraph.html', {
+                    yAxisLabel: '% of users',
+                    partitions: 5,
+                    yAxisValues: pa.distribution,
+                    yAxisLabels: [{value: labels['label_priority_3_desc'],color:'#C9733B'},{value: labels['label_priority_2_desc'],color:'#E6C846'},{value: labels['label_priority_1_desc'],color:'#30A82C'}],
+                    minValue: 0,
+                    maxValue: 100,
+                    xAxis: labels['label_pa_graph_xaxis']
+                }) %>
+            </div>
+            <div class="pa-graph-desc">
+                    <%= labels['label_group_cust_fit_spread_desc'] %>            
+            </div>
+        </div>
+    </div>
+        <!-- <div class="perfect-box">
+            <div class="perfect-score"><%= pa.perfectCount %>%</div>
+            <div class="perfect-score-text"><%= labels['label_group_cust_fit_perfect_score_desc']%></div>
+        </div> -->
+        <div class="group-comp-insight-box">
+                <div class="comp-insight-img-box">
+                    <img class="comp-insight-img" src="https://knolskape-website.s3.amazonaws.com/misc/suyog_patil/2019/06/25/9/insights.png"></img>
+                    <div class="comp-insight-label"><%= labels['label_pa_insight_title'] %></div>
+                </div>
+                <div class="comp-insight-text-box">
+                    <%= labels['label_group_cust_fit_insight'] %>
+                </div>
+        </div>
+
+
+</section>
+
+<!-- Code for graph -->
+</script>

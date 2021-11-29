@@ -1,0 +1,261 @@
+<!-- Setting up data for the graph -->
+<%
+	let graphData = objectivesData.graphData;
+
+	let xAxisLabels = [];
+    let data = [];
+    let yAxisScaleLabel = labels[objectivesData.graphAxisLabels.find(p=>p.axis==='Y').name]
+    let xAxisScaleLabel = labels[objectivesData.graphAxisLabels.find(p=>p.axis==='X').name]
+
+    for(let i=0;i< graphData.length;i++) {
+        xAxisLabels.push(i);
+        data.push(graphData[i])   
+    }
+%>
+
+<section class="container">
+    <div class="heading">
+        <%= labels[objectivesData.title] %>
+    </div>
+    <div class="hr-line-heading"></div>
+    <div class="objective">
+        <div class="objectives-header">
+            <div class="objectives-text-details">
+                <div class="objective-name"><%= labels[objectivesData.objectivesList[0].name] %>:&nbsp&nbsp&nbsp&nbsp<%=objectivesData.objectivesList[0].value%>%</div>
+            </div>
+            <div class="objective-status">
+                <% if(objectivesData.objectivesList[0].isCompleted) { %>
+                    <% if(lang=='tr'){ %>
+					    <img src="https://knolskape-website.s3.amazonaws.com/misc/arushi_jain/2021/06/14/99/ribbon_green.svg#svgView(preserveAspectRatio(none))" 
+                            style="
+                            width: 120px;
+                            height: 23px;"
+                        >
+                        <div class="banner-text"><%= labels[objectivesData.targetAchievedStatusTexts[0]] %></div>
+					<% }else{ %>
+						<img src="https://knolskape-website.s3.amazonaws.com/misc/arushi_jain/2021/06/14/99/ribbon_green.svg#svgView(preserveAspectRatio(none))" 
+                            style="
+                            width: 90px;
+                            height: 23px;"
+                        >
+                        <div class="banner-text"><%= labels[objectivesData.targetAchievedStatusTexts[0]] %></div>
+					<% } %>	
+                <% } else if (objectivesData.objectivesList[0].value > 75 && objectivesData.objectivesList[0].value < 100) { %>
+                    <% if(lang=='tr'){ %>
+					    <img src="https://knolskape-website.s3.amazonaws.com/misc/arushi_jain/2021/06/14/42/ribbon_yellow.svg#svgView(preserveAspectRatio(none))" 
+                            style="
+                            width: 197px;
+                            height: 23px;"
+                        >
+                        <div class="banner-text-just-missed"><%= labels['label_objectives_just_missed'] %></div>
+					<% }else{ %>
+						<img src="https://knolskape-website.s3.amazonaws.com/misc/arushi_jain/2021/06/14/42/ribbon_yellow.svg#svgView(preserveAspectRatio(none))" 
+                            style="
+                            width: 95px;
+                            height: 23px;"
+                        >
+                        <div class="banner-text-just-missed"><%= labels['label_objectives_just_missed'] %></div>
+					<% } %>	
+                <% } else { %>
+                    <% if(lang=='tr'){ %>
+					    <img src="https://knolskape-website.s3.amazonaws.com/misc/arushi_jain/2021/06/14/69/ribbon_grey.svg#svgView(preserveAspectRatio(none))" 
+                            style="
+                            width: 158px;
+                            height: 23px;"
+                        >
+                        <div class="banner-text" style="color:rgba(3, 26, 32,0.5)"><%= labels[objectivesData.targetAchievedStatusTexts[1]] %></div>
+					<% }else{ %>
+						<img src="https://knolskape-website.s3.amazonaws.com/misc/arushi_jain/2021/06/14/69/ribbon_grey.svg#svgView(preserveAspectRatio(none))" 
+                            style="
+                            width: 120px;
+                            height: 23px;"
+                        >
+                        <div class="banner-text" style="color:rgba(3, 26, 32,0.5)"><%= labels[objectivesData.targetAchievedStatusTexts[1]] %></div>
+					<% } %>	
+                    
+                <% } %>
+            </div>
+        </div>
+        <div class="objective-details">
+            <%= labels[objectivesData.objectivesList[0].description] %>            
+        </div>
+        <div class="objective-1-visual">
+            <div class="objective-label-text">0</div>
+            <% let progressBarWidth=1.64*objectivesData.objectivesList[0].value; %>
+            <div class="objective-1-background">
+                <div class="objective-1-progress" style="width:<%=progressBarWidth%>px"></div>
+                <div class="objective-1-progress-value" style="left:<%=progressBarWidth - 8 %>px"><%= objectivesData.objectivesList[0].value %>%</div> 
+                <div class="objective-1-progress-vr-line" style="left:<%=progressBarWidth%>px"></div>
+                <!-- <div class="objective-1-target-text" style="right:-16px"><%= labels[objectivesData.targetLabel] %></div>  -->
+                <div class="objective-1-target-vr-line" style="right:0px"></div>
+            </div>
+            <div class="objective-label-text">100</div>
+        </div>
+    </div>
+    <div class="objective objective-2">
+        <div class="objective-details">
+            <%= labels[objectivesData.objectivesList[1].description] %>            
+        </div>
+        <div class="objective-2-visual">
+            <%  let min = Math.min(objectivesData.objectivesList[1].value,objectivesData.objectivesList[1].maxValue) 
+                let correctBars = min*90/objectivesData.objectivesList[1].maxValue;
+                let incorrectBars = correctBars< 90 ? 90 - correctBars : 0;
+                let textPosition = correctBars*3-10;
+                let progressBarColor = '#031A2033';
+                let textColor = '#031A20CC';
+                if(objectivesData.objectivesList[1].value <= objectivesData.objectivesList[1].maxValue) {
+                    progressBarColor = '#FF1E50';
+                    textColor = '#232882B2';
+                }
+            %>
+            <div class="start-text">
+                <%= labels[objectivesData.startLabel] %>
+                <br />
+                <%= labels['label_report_day'] %>&nbsp;0
+            </div>
+            <div class="objective-2-background">
+                <div class="objective-2-progress-start" style="background:<%=progressBarColor%>"></div>
+                <% for(let i=0; i< correctBars; i++) { %>
+                    <div class="objective-2-progress-correct" style="background:<%=progressBarColor%>"></div>
+                <% } %>
+                <div class="objective-2-progress-correct-end" style="background:<%=progressBarColor%>"></div>
+                <% for(let i=0; i< incorrectBars; i++) { %>
+                    <div class="objective-2-progress-incorrect"></div>
+                <% } %>
+                <% if(incorrectBars>0) { %>
+                    <div class="objective-2-progress-incorrect-end"></div>
+                    <div class="objective-2-day" style="left:<%=textPosition%>px;color:<%=textColor%>">
+                        Day <%=objectivesData.objectivesList[1].value%>
+                    </div>
+                <% } else { %>
+                    <div class="objective-2-progress-start"></div>
+                    <div class="deadline-crossed" style="right:-62px;top:-19px;color:<%=textColor%>">
+                        <%=labels[objectivesData.objectivesList[1].deadlineCrossedLabel]%>
+                    </div>
+                <% } %>
+            </div>
+            <div class="deadline-text" style="color:<%=textColor%>">
+                <%= labels[objectivesData.deadlineLabel] %>
+                <br />
+                <%= labels['label_report_day'] %>&nbsp;<%= objectivesData.objectivesList[1].maxValue%>
+            </div>
+        </div>
+    </div>
+    <div class="hr-line-divider"></div>
+    <div class="message-container">
+        <img class="person-image" src="https://webassets.knolskape.com/misc/sindhu_anandhakrishnan/2019/07/22/35/cpo.svg"></img>
+        <img class="quote-img" src="https://knolskape-website.s3.amazonaws.com/misc/suyog_patil/2019/06/20/15/quote.png"></img>
+        <div class="message-text-box"><div class="message-text"><%= labels[objectivesData.objectivesMessage] %></div>
+        </div>
+    </div>
+    <div class="hr-line-divider"></div>
+    <div class="agile-leader-heading"><%= labels[objectivesData.graphHeader] %></div>
+    <div class="hr-line-leader-score-subheading"></div>
+    <div class="objectives-graph">
+        <canvas id="objectivesLineGraph" width="520" height="140"></canvas>	
+    </div>
+</section>
+
+<!-- Code for graph -->
+<script>
+	var defaultTicks = {
+		fontColor: 'rgba(0, 0, 0, 0.7)',
+		fontFamily: 'Open Sans',
+		fontSize: 10
+    };
+
+	var xAxisLabels = <%-JSON.stringify(xAxisLabels);%>;
+    var data = <%-JSON.stringify(data);%>;
+    var yAxisScaleLabel = <%-JSON.stringify(yAxisScaleLabel);%>;
+    var xAxisScaleLabel = <%-JSON.stringify(xAxisScaleLabel);%>;
+
+    var ctx = document.getElementById('objectivesLineGraph').getContext('2d');
+
+    //adding gradient
+    var gradient = ctx.createLinearGradient(0, 0, 0, 130);
+    gradient.addColorStop(0, 'rgba(35, 40, 130, 0.8)');
+    gradient.addColorStop(1, 'rgba(35, 40, 130, 0)');
+
+	var myChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: xAxisLabels,
+			datasets: [{
+                data: data,
+                backgroundColor: gradient,
+				fill: 'origin',
+				lineTension: 0,
+				borderColor: 'rgba(35, 40, 100, 1)',
+				borderWidth: '2'
+			}]
+        },
+        
+		options: {
+			legend: {
+				display: false
+            },
+            elements: {
+                point:{
+                    radius: 0
+                }
+            },
+			scales: {
+				yAxes: [{
+					ticks: {
+						...defaultTicks,
+						suggestedMin: 0,
+						suggestedMax: 100,
+						stepSize: 20,
+						padding: 1,
+						callback: function (value, index, values) {
+							return value + '%';
+						}
+					},
+					gridLines: {
+						color: 'rgba(0, 0, 0, 0.06)',
+						zeroLineColor: 'rgba(0, 0, 0, 0.06)',
+						drawBorder: false
+					},
+					scaleLabel: {
+						display: true,
+						labelString: yAxisScaleLabel,
+                        fontColor: '#031a20CC',
+						fontFamily: 'Open Sans',
+                        fontStyle:600,
+						fontSize: 10,
+						padding: {
+							bottom: 10
+						}
+					}
+				}],
+				xAxes: [{
+					ticks: {
+						...defaultTicks,
+						callback: function (value, index, values) {
+							if (value == '0') {
+								return '';
+							}
+							return value;
+						}
+					},
+					gridLines: {
+						display: true,
+						color: 'rgba(0, 0, 0, 0.06)',
+						zeroLineColor: 'white'
+					},
+					scaleLabel: {
+						display: true,
+						labelString: xAxisScaleLabel,
+                        fontColor: '#031a20CC',
+						fontFamily: 'Open Sans',
+                        fontSize: 10,
+                        fontStyle:600,
+						padding: {
+							bottom: 10
+						}
+					}
+				}],
+			}
+		}
+	});
+</script>

@@ -1,0 +1,73 @@
+<div class="vertical-graph-container">
+
+
+
+		
+		
+		<div class="vg-x-axis-line-container">
+			<%
+				for(var i = 0; i <= partitions; i++) {
+			%>
+					<% if(i == 0) {%>
+						<div class="vg-x-axis-line-full">
+							<div class="vg-x-axis-value"><%- minValue + (((maxValue - minValue)/partitions) * i)%>%</div>
+						</div>
+					<% } else { %>
+						<div class="vg-x-axis-line">
+							<div class="vg-x-axis-value"><%- minValue + (((maxValue - minValue)/partitions) * i)%>%</div>
+						</div>
+					<% } %>
+			<%
+				}
+			%>
+		</div>
+		<%
+		for(var j = 0; j < competencies.length; j++) {
+		%>
+
+		<%let yAxisValues = competencies[j].graphData	%>
+		<div class="vg-y-axis-container-comp" style="margin-left: <%- j*23%>%;">
+			
+
+				<%
+				var count = 0;
+				for(var i = 0; i < yAxisValues.length; i++) {
+			%>
+				<% if(i == yAxisValues.length - 1) {%>
+					<div
+						style="height: <%- (100 - count)%>%;background-color: <%- grades[i].color%> %>;"
+						class="vg-single-bar-comp"
+					>
+						
+						<!-- <div class="vg-single-bar-value-comp"><%=(100 - count) < 0 ? 0 : (100 - count)  %>%</div> -->
+					</div>
+				<% } else {
+					var heightValue = yAxisValues[i].value;
+					count += heightValue;
+				%>
+					<div
+						style="height: <%=heightValue%>%;background-color: <%- grades[i].color%>;"
+						class="vg-single-bar-comp"
+					>
+						
+						<!-- <div class="vg-single-bar-value-comp"><%=heightValue%>%</div> -->
+					</div>
+
+				<% } %>
+				
+			<%
+				}
+			%>
+			
+		</div>
+
+		<div class='x-axis-comp' style="margin-left: <%- j*23%>%;"><%= labels[competencies[j].name] %></div>
+		<%
+				}
+			%>
+
+
+
+
+	</div>
+	

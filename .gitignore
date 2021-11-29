@@ -1,0 +1,8 @@
+node_modules
+coverage
+logs
+logs/app.log
+logs/err.log
+logs/out.log
+.env
+newrelic_agent.log

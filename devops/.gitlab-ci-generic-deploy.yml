@@ -1,0 +1,63 @@
+.deploy_template:
+  before_script:
+    # Preparing the GCP service account details and connecting to GCP via gcloud
+    - echo $GCP_DEPLOYER_SERVICE_ACCOUNT | base64 -d > ${CI_PROJECT_DIR}/gcloud-service-key.json
+    - gcloud auth activate-service-account --key-file ${CI_PROJECT_DIR}/gcloud-service-key.json
+    - |
+      if [ $IS_PRIVATE_CLUSTER == "true" ]; then 
+        gcloud container clusters get-credentials --internal-ip ${KUBE_CLUSTER_NAME} --region ${GCP_REGION}
+      else
+        gcloud container clusters get-credentials ${KUBE_CLUSTER_NAME} --region ${GCP_REGION}
+      fi
+
+  script:
+
+    # Replacing the app name
+    - sed -i "s|GCP_APP_NAME|$APP_NAME|g" devops/k8s/service.yaml
+    - sed -i "s|GCP_APP_NAME|$APP_NAME|g" devops/k8s/deployment-app.yaml
+    - sed -i "s|GCP_APP_NAME|$APP_NAME|g" devops/k8s/deployment-app-preemptible.yaml
+
+    # Replacing the app port
+    - sed -i "s|KUBE_CONTAINER_APP_PORT|$KUBE_CONTAINER_APP_PORT|g" devops/k8s/service.yaml
+    - sed -i "s|KUBE_CONTAINER_APP_PORT|$KUBE_CONTAINER_APP_PORT|g" devops/k8s/deployment-app.yaml
+    - sed -i "s|KUBE_CONTAINER_APP_PORT|$KUBE_CONTAINER_APP_PORT|g" devops/k8s/deployment-app-preemptible.yaml
+
+    # Replacing the namespace name
+    - sed -i "s|KUBE_NAMESPACE|$KUBE_NAMESPACE|g" devops/k8s/service.yaml
+    - sed -i "s|KUBE_NAMESPACE|$KUBE_NAMESPACE|g" devops/k8s/deployment-app.yaml
+    - sed -i "s|KUBE_NAMESPACE|$KUBE_NAMESPACE|g" devops/k8s/deployment-app-preemptible.yaml
+
+    # Replacing the replica counts
+    - sed -i "s|KUBE_ONDEMAND_REPLICA_COUNT|$KUBE_ONDEMAND_REPLICA_COUNT|g" devops/k8s/deployment-app.yaml
+    - sed -i "s|KUBE_PREEMPTIBLE_REPLICA_COUNT|$KUBE_PREEMPTIBLE_REPLICA_COUNT|g" devops/k8s/deployment-app-preemptible.yaml
+
+    # Replacing the registry URL and new image URL
+    - sed -i "s|GCP_REGISTRY_URL|$GCP_REGISTRY_URL|g" devops/k8s/deployment-app.yaml
+    - sed -i "s|GCP_REGISTRY_URL|$GCP_REGISTRY_URL|g" devops/k8s/deployment-app-preemptible.yaml
+    - sed -i "s|$APP_NAME:[0-9.]*|$APP_NAME:$CI_PIPELINE_ID|g" devops/k8s/deployment-app.yaml
+    - sed -i "s|$APP_NAME:[0-9.]*|$APP_NAME:$CI_PIPELINE_ID|g" devops/k8s/deployment-app-preemptible.yaml
+    
+    # Applying the new configurations to the cluster
+    - kubectl apply -f devops/k8s/service.yaml
+    - kubectl apply -f devops/k8s/deployment-app.yaml
+    - kubectl apply -f devops/k8s/deployment-app-preemptible.yaml
+    
+    # Apply HPA if required
+    - |
+      if [ "$DEPLOY_HPA" == "true" ]; then 
+
+        sed -i "s|GCP_APP_NAME|$APP_NAME|g" devops/k8s/deployment-app-hpa.yaml
+        sed -i "s|KUBE_NAMESPACE|$KUBE_NAMESPACE|g" devops/k8s/deployment-app-hpa.yaml
+        sed -i "s|KUBE_PREEMPTIBLE_MAX_CONTAINER|$KUBE_PREEMPTIBLE_MAX_CONTAINER|g" devops/k8s/deployment-app-hpa.yaml
+        sed -i "s|KUBE_PREEMPTIBLE_MIN_CONTAINER|$KUBE_PREEMPTIBLE_MIN_CONTAINER|g" devops/k8s/deployment-app-hpa.yaml
+        echo "Deploying hpa"
+        kubectl apply -f devops/k8s/deployment-app-hpa.yaml; 
+      fi
+
+    - RESULT=$(kubectl rollout status deployment $APP_NAME-deployment --timeout=300s -n $KUBE_NAMESPACE)
+    - RESULT=$(kubectl rollout status deployment $APP_NAME-preemptible-deployment --timeout=300s -n $KUBE_NAMESPACE)
+    - echo "$RESULT" | grep -q "successfully"
+
+    # Getting logs from the newly deployed pods
+    - pod=$(kubectl get pod -l app=$APP_NAME --sort-by=.metadata.creationTimestamp -n $KUBE_NAMESPACE -o json | jq -r '.items[-1]  | .metadata.name')
+    - if [ ! -z "$pod" ]; then kubectl logs $pod -n $KUBE_NAMESPACE; fi

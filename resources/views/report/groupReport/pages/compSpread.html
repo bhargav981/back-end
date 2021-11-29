@@ -1,0 +1,56 @@
+<section class="container competency-container">
+
+    <div class="competency-heading-group">
+        <div><%= labels['label_group_comp_grp_spread_title'] %></div>
+    </div>
+
+
+    <div class="comp-hr-line-heading"></div>
+
+    <div class="objective-padding"></div>
+    <div class="objective-details">
+            <%= labels['label_group_comp_grp_spread_desc'] %>           
+    </div>
+    
+
+    <div class="competency-graph-group">
+       <div class="grades-box-container">
+            <%
+            for(var i = 0; i < grades.length; i++) {
+            %>
+            <div style="display: flex;align-items: center;">
+                <div class="grade-box" style="background-color: <%- grades[i].color%>"></div>
+                <div class="grade-box-text"><%=labels[grades[i].value]%></div>
+            </div>
+           <%
+				}
+			%>
+       </div>
+       <div class="sten-scale"></div>
+       <div class="comp-graph-container">
+            <%- include('../templates/competencyGraph.html', {
+                yAxisLabel: '% of users',
+                partitions: 5,
+                competencies,
+                minValue: 0,
+                maxValue: 100,
+                xAxis: labels['label_pa_graph_xaxis'],
+                grades,
+                labels
+
+            }) %>
+        </div>
+    </div>
+
+
+    <div class="group-comp-insight-box">
+        <div class="comp-insight-img-box">
+            <img class="comp-insight-img" src="https://knolskape-website.s3.amazonaws.com/misc/suyog_patil/2019/06/25/9/insights.png"></img>
+            <div class="comp-insight-label"><%= labels['label_group_takeaways_static_insight_title'] %></div>
+        </div>
+        <div class="comp-insight-text-box">
+            <%= labels['label_group_comp_grp_spread_insight'] %>
+        </div>
+    </div>
+   
+</section>

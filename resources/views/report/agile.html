@@ -1,0 +1,173 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Report</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-9" />
+		
+		<!-- fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+
+		<!-- styles -->
+		<link rel="stylesheet" href="<%=appUrl%>/assets/styles/report.css">
+		<link rel="stylesheet" href="<%=appUrl%>/assets/styles/branding.css">
+		<link rel="stylesheet" href="<%=appUrl%>/assets/styles/pageStyles.css">
+		<link rel="stylesheet" href="<%=appUrl%>/assets/styles/templateStyles.css">
+
+		<!-- Local css file -->
+		<link rel="stylesheet" href="/assets/styles/report.css" />
+		<link rel="stylesheet" href="/assets/styles/branding.css" />
+		<link rel="stylesheet" href="/assets/styles/pageStyles.css" />
+		<link rel="stylesheet" href="/assets/styles/templateStyles.css" />
+
+		<!-- Include chart js -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.6.0"></script>
+		<script>
+			Chart.plugins.unregister(ChartDataLabels);
+		</script>
+
+	</head>
+
+	<body>
+		<% let labels = json.labels %>
+		<% let lang = json.lang %>
+		<!-- Introduction page -->
+		<% let userData = json.user %>
+		<% let products = json.knolskapeProducts %>
+		<%- include('pages/introduction.html', {
+			labels,
+			userData
+		}) %> 
+		<div class="page-breaker"></div>
+		<% let pageNumber=2 %>
+		
+		<!-- Disclaimer page -->
+		<div class="keeptogether position-relative">
+			<%- include('pages/disclaimer.html', {
+				labels
+			}) %> 
+			<%- include('commonItems/footer.html', {
+				pageNumber, labels	
+			}) %>
+		</div>
+		<div class="page-breaker"></div>
+		<% pageNumber+=1 %>
+		
+		<!-- About sim and report page -->
+		<div class="keeptogether position-relative">
+			<% let aboutData = json.about %>
+			<%- include('pages/about.html', {
+				labels,
+				aboutData
+			}) %> 
+			<%- include('commonItems/footer.html', {
+				pageNumber, labels
+			}) %>
+		</div>
+		<div class="page-breaker"></div>
+		<% pageNumber+=1 %>
+
+		<!-- Agile scores and insights page -->
+		<div class="keeptogether position-relative">
+			<% let insightsData = json.agileScore,
+				competenciesData = json.competencies %>
+			<%- include('pages/insights.html', {
+				labels,
+				insightsData,
+				competenciesData
+			}) %> 
+			<%- include('commonItems/footer.html', {
+				pageNumber, labels
+			}) %>
+		</div>
+		<div class="page-breaker"></div>
+		<% pageNumber+=1 %>
+
+		<!-- Objectives page -->
+		<div class="keeptogether position-relative">
+			<% let objectivesData = json.objectives %>
+			<%- include('pages/objectives.html', {
+				labels,
+				objectivesData,
+				lang
+			}) %> 
+			<%- include('commonItems/footer.html', {
+				pageNumber, labels
+			}) %>
+		</div>
+		<div class="page-breaker"></div>
+		<% pageNumber+=1 %>
+
+		<!-- Other metrics page -->
+		<div class="keeptogether position-relative">
+			<% let othermetricsData = json.othermetrics %>
+			<%- include('pages/othermetrics.html', {
+				labels,
+				othermetricsData
+			}) %> 
+			<%- include('commonItems/footer.html', {
+				pageNumber, labels	
+			}) %>
+		</div>
+		<div class="page-breaker"></div>
+		<% pageNumber+=1 %>
+
+		<!-- Competency details pages -->
+		<% for(let i=0;i< json.competencies.length;i++) { %>
+			<% let competencyData = json.competencies[i] %>
+			<!-- Competency details - text -->
+			<div class="keeptogether position-relative">
+				<%- include('pages/competencyText.html', {
+					labels,
+					competencyData,
+					id:i+1
+				}) %> 
+				<%- include('commonItems/footer.html', {
+					pageNumber,labels
+				}) %>
+			</div>
+			<div class="page-breaker"></div>
+			<% pageNumber+=1 %>
+
+			<!-- Competency details - graph -->
+			<div class="keeptogether position-relative">
+				<%- include('pages/competencyGraph.html', {
+					labels,
+					competencyData,
+					id:i+1
+				}) %> 
+				<%- include('commonItems/footer.html', {
+					pageNumber, labels	
+				}) %>
+			</div>
+			<div class="page-breaker"></div>
+			<% pageNumber+=1 %>
+		<% } %>
+		<!-- Key takeaways page -->
+		<div class="keeptogether position-relative">
+			<% let keyTakeAwaysData = json.keyTakeAways %>
+			<%- include('pages/keyTakeAways.html', {
+				labels,
+				keyTakeAwaysData
+			}) %> 
+			<%- include('commonItems/footer.html', {
+				pageNumber, labels
+			}) %>
+		</div>
+
+		<div class="page-breaker"></div>
+
+		<div class="keeptogether position-relative">
+			<%- include('pages/branding1.html', {products, labels}) %>
+		</div>
+
+		<div class="page-breaker"></div>
+
+		<div class="keeptogether position-relative">
+			<%- include('pages/branding2.html', {products, labels, lang}) %>
+		</div>
+		
+	</body>
+</html>

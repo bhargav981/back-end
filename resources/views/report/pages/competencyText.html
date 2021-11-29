@@ -1,0 +1,62 @@
+<section class="container competency-container">
+    <div class="competency-heading">
+        <img class="bookmark" src="https://knolskape-website.s3.amazonaws.com/misc/suyog_patil/2019/06/21/18/boookmark.png"></img>
+        <div class="competency-number">#<%= id %></div>
+        <div><%= labels[competencyData.name] %></div>
+        <div class="score-box">
+            <div class="score-text">
+                <div class="current-score"><%= labels[competencyData.scoreLabel] %> : &nbsp<%= competencyData.score %>&nbsp</div>
+                <div class="total-score">/10</div>
+            </div>
+            <%
+                let color 
+                if(competencyData.score <= 2) {
+                    color='#A01313'
+                } else if(competencyData.score <= 4) {
+                    color='#EB8822'
+                } else if(competencyData.score <= 6) {
+                    color='#F3D70A '
+                } else if(competencyData.score <= 8) {
+                    color='#6DC75D'
+                } else {
+                    color='#1C9443'
+                }
+            %>
+            <div class="competency-score-progress-bar" style="margin: 0">
+                <%  for(var j=0;j< competencyData.score;j++) { %>
+                    <div class="competency-progress-colored" style="background-color:<%=color%>"></div>
+                <% } %>
+                <%  for(var j=0;j< 10-competencyData.score;j++) { %>
+                    <div class="competency-progress-normal"></div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <div class="comp-hr-line-heading"></div>
+    <div class="competency-details">
+        <div class="competency-icon">
+            <img src=<%=competencyData.icon%>></img>
+        </div>
+        <div class="competency-desc"><%=labels[competencyData.desc]%></div>
+    </div>
+    <div class="hr-line-divider"></div>
+    <div class="competency-points">
+        <% for(let i=0;i< competencyData.points.length;i++) { %>
+            <div class="competency-points-header">
+                <span class="competency-points-number">#<%=i+1%></span>
+                <%= labels[competencyData.points[i].name] %>
+            </div>
+            <div class="competency-points-desc">
+                <%= labels[competencyData.points[i].desc] %>
+            </div>
+        <% } %>    
+    </div>
+    <div class="comp-message-container">
+        <img class="person-image" src="https://webassets.knolskape.com/misc/sindhu_anandhakrishnan/2019/07/22/35/cpo.svg"></img>
+        <img class="quote-img" src="https://knolskape-website.s3.amazonaws.com/misc/suyog_patil/2019/06/20/15/quote.png"></img>
+        <div class="message-text-box">
+            <div class="message-grade"><%= labels[competencyData.grade] %></div>
+            <div class="comp-message-text"><%= labels[competencyData.gradeDesc] %></div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,28 @@
+<section class="introduction-container">
+    <div class="title">
+        <div class="sim-name"><%= labels['label_group_sim_name'] %></div>
+        <div class="sim-report-text"><%= labels['label_group_report_title'] %></div>
+    </div>
+	<div class="bottom-text">
+		<div class="user-name"><%= groupData.name %></div>
+		<%  var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth() + 1; //January is 0!
+			var yyyy = today.getFullYear();
+
+			if (dd < 10) {
+			dd = '0' + dd;
+			}
+
+			if (mm < 10) {
+			mm = '0' + mm;
+			}
+
+			today = dd + '.' + mm + '.' + yyyy;
+		%>
+		<div class="generated-on-text-group"><%= labels['label_report_generated_on'] %> : <%=today%></div>
+		<div class="generated-on-text-group">
+			<%= labels['label_group_completed_users'].replace('%{COMPLETED_USERS_COUNT}',groupData.completedUsersCount) %>
+		</div>
+	</div>
+</section>

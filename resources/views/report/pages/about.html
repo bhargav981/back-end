@@ -1,0 +1,30 @@
+<section class="container">
+    <div class="heading">
+        <%= labels[aboutData.simulation.title] %>
+    </div>
+    <div class="hr-line-heading"></div>
+    <div class="about-sim-content-box">
+        <div class="about-sim-text-with-image">
+            <img 
+                class="about-sim-image"
+                src="https://knolskape-website.s3.amazonaws.com/misc/suyog_patil/2019/06/19/62/about-page-img.png"
+            >
+            <div><%= labels[aboutData.simulation.imageDesc] %></div>
+        </div>
+        <div class="about-sim-text"><%= labels[aboutData.simulation.simDesc] %></div>
+    </div>
+    <div class="about-report-box">
+        <div class="heading">
+            <%= labels[aboutData.report.title] %>
+        </div>
+        <div class="hr-line-report-heading"></div>
+        <div class="about-report-list">
+            <% for (var i = 0; i < aboutData.report.reportDesc.length; i++) { %>
+                <div class="key-point">
+                    <div class="bullet"></div>
+                    <div><%= labels[aboutData.report.reportDesc[i]] %></div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</section>

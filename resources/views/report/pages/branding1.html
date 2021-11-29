@@ -1,0 +1,22 @@
+<section class="container">
+		<div class="heading">
+			<%= labels['label_knol_head'] %>
+			</div>
+		<div class="hr-line-heading"></div>
+			
+		<div class="desc-text">
+			<%- labels['label_knol_desc'] %>
+		</div>
+
+		<div class="about-knolskape-products-container">
+			<%
+				for(let i = 0; i < 6; i++) {
+			%>
+				<%- include('templates/productBox.html', {
+					descObj: products[i]
+				}) %>
+			<%}%>
+		</div>
+		
+
+</section>

@@ -1,0 +1,86 @@
+<!-- Setting up data for the graph -->
+<section class="container">
+    <div class="heading">
+        <%= labels['label_group_agile_objectives_title'] %>
+    </div>
+    <div class="hr-line-heading"></div>
+    <div class="hr-line-divider"></div>
+
+    <div class="graph-container-group">
+
+        <div class="agile-leader-content">
+                <div class="agile-leader-heading"><%= labels['label_group_team_skill_title'] %></div>
+                <div class="hr-line-agile-leader-subheading"></div>
+        </div>
+        
+        <div class="display-flex-graph">
+            <div class="pa-graph graph-space">
+                <%- include('../templates/verticalGraph.html', {
+                    yAxisLabel: 'label_y_axis_group',
+                    partitions: 5,
+                    yAxisValues: skill.distribution,
+                    yAxisLabels: [{value: labels['label_priority_3_desc'],color:'#C9733B'},{value: labels['label_priority_2_desc'],color:'#E6C846'},{value: labels['label_priority_1_desc'],color:'#30A82C'}],
+                    minValue: 0,
+                    maxValue: 100,
+                    xAxis: labels['label_group_team_skill_title']
+
+                }) %>
+            </div>
+            <div class="pa-graph-desc">
+                    <%= labels['label_group_team_skill_desc'] %>            
+            </div>
+        </div>
+    </div>
+
+    <div class="graph-container-group">
+        <div class="agile-leader-content">
+            <div class="agile-leader-heading"><%= labels['label_group_team_morale_title'] %></div>
+            <div class="hr-line-agile-leader-subheading"></div>
+        </div>
+        <div class="display-flex-graph">
+            <div class="pa-graph graph-space">
+                <%- include('../templates/verticalGraph.html', {
+                    yAxisLabel: 'label_y_axis_group',
+                    partitions: 5,
+                    yAxisValues: morale.distribution,
+                    yAxisLabels: [{value: labels['label_priority_3_desc'],color:'#C9733B'},{value: labels['label_priority_2_desc'],color:'#E6C846'},{value: labels['label_priority_1_desc'],color:'#30A82C'}],
+                    minValue: 0,
+                    maxValue: 100,
+                    xAxis: labels['label_group_team_morale_title']
+
+                }) %>
+            </div>
+            <div class="pa-graph-desc">
+                    <%= labels['label_group_team_morale_desc'] %>            
+            </div>
+        </div>
+    </div>
+
+
+    <div class="graph-container-group">
+        <div class="agile-leader-content">
+            <div class="agile-leader-heading"><%= labels['label_group_cust_focus_title'] %></div>
+            <div class="hr-line-agile-leader-subheading"></div>
+        </div>
+        
+        <div class="display-flex-graph">
+            <div class="pa-graph graph-space">
+                <%- include('../templates/verticalGraph.html', {
+                    yAxisLabel: 'label_y_axis_group',
+                    partitions: 5,
+                    yAxisValues: cs.distribution,
+                    yAxisLabels: [{value: labels['label_priority_3_desc'],color:'#C9733B'},{value: labels['label_priority_2_desc'],color:'#E6C846'},{value: labels['label_priority_1_desc'],color:'#30A82C'}],
+                    minValue: 0,
+                    maxValue: 100,
+                    xAxis: labels['label_group_cust_focus_title']
+
+                }) %>
+            </div>
+            <div class="pa-graph-desc">
+                    <%= labels['label_group_cust_focus_desc'] %>            
+            </div>
+        </div>
+    </div>
+        
+</section>
+

@@ -1,0 +1,59 @@
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: GCP_APP_NAME-deployment
+  namespace: KUBE_NAMESPACE
+spec:
+  replicas: KUBE_ONDEMAND_REPLICA_COUNT
+  selector:
+      matchLabels:
+        app: GCP_APP_NAME
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  minReadySeconds: 3
+  template:
+    metadata:
+      labels:
+        app: GCP_APP_NAME
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nodeName
+                operator: In
+                values: ["knol-ondemand"]
+      containers:
+      - name: agile-api-app
+        image: GCP_REGISTRY_URL/GCP_APP_NAME:3421
+        ports:
+        - containerPort: KUBE_CONTAINER_APP_PORT
+        readinessProbe:
+          httpGet:
+            port: KUBE_CONTAINER_APP_PORT
+            path: /health
+          initialDelaySeconds: 10
+          failureThreshold: 2
+          successThreshold: 1 
+          periodSeconds: 15
+          timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: KUBE_CONTAINER_APP_PORT
+          initialDelaySeconds: 10
+          failureThreshold: 3
+          successThreshold: 1 
+          periodSeconds: 30
+          timeoutSeconds: 5
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "1000m"
+            memory: "512Mi"

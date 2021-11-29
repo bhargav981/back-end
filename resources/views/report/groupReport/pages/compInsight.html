@@ -1,0 +1,136 @@
+<section class="container competency-container">
+    <div class="heading">
+            <%= labels['label_competency_prof_level_title'] %>
+    </div>
+    <div class="comp-hr-line-heading"></div>
+    
+    <% if(pageDesc == 'true') {%>
+        <div class="comp-desc-text-group"> <%= labels['label_competency_prof_level_desc'] %> </div>   
+    <% }  %>
+
+    <div class="grade-scale">
+        <div class="grade-names">
+            <% for (var i = 0; i < agile.gradeNames.length; i++) { %>
+                <div class="grade-name">
+                    <div class="grade-icon level-<%= i %>"><%= labels[agile.gradeNames[i][0]] %></div>
+                    <div class="grade-text"><%= labels[agile.gradeNames[i]] %></div>
+                </div>
+            <% } %>
+        </div>
+        <div class="sten-scale"></div>
+    </div>
+    
+    <div class="group-comp-title"><%= labels[comp1.name] %></div>
+    <div class="comp-desc-text-group"></span><%= labels[comp1.desc] %></span></div>
+        
+    <div>
+        <div class="display-flex-group" style="margin-left:<%=comp1.marginLeftGroup%>">
+            <div>
+                <div class="group-box-score"> <%= comp1.score %></div>
+                <div class="group-line"></div>
+            </div>
+            <div class="group-comp"><%= labels['label_group_score_title'] %></div>
+        </div>
+
+        <div class="comp-score-box-outer">
+            <div class="comp-score-box-inner" style="width:<%=comp1.width%>"></div>
+        </div>
+        <div class="display-flex-benchmark" style="margin-left:<%=comp1.marginLeftUniverse%>">
+            <div>   
+                <div class="benchmark-line"></div>
+                <div class="benchmark-box-score"><%= comp1.universe %></div>
+            </div>
+            <div class="benchmark-comp"><%= labels['label_benchmark_score_title'] %></div>
+        </div>
+    </div>
+
+    <div class="group-comp-insight-box">
+        <div class="comp-insight-text-box-competency">
+
+
+            <%
+                let color='';
+                let label='label_comp_novice';
+                if(comp1.score <= 2) {
+                    color='#A01313';
+                    label='label_comp_novice';
+                } else if(comp1.score <= 4) {
+                    color='#EB8822';
+                    label='label_comp_emerging';
+                } else if(comp1.score <= 6) {
+                    color='#F3D70A';
+                    label='label_comp_competent';
+                } else if(comp1.score <= 8) {
+                    color='#6DC75D';
+                    label='label_comp_proficient';
+                } else {
+                    color='#1C9443';
+                    label='label_comp_rolemodel';
+                }
+            %>
+
+            <div class="comp-score-label" style="background-color: <%=color%>;"><%= labels[label]%></div>
+            <!-- <img class="comp-insight-img" src="https://knolskape-website.s3.amazonaws.com/misc/suyog_patil/2019/06/25/9/insights.png"></img> -->
+            <!-- <div class="comp-insight-label"><%= labels['label_group_competency_insight_label'] %>!</div> -->
+        </div>
+        <div class="comp-insight-text-box">
+            <%= labels[comp1.gradeDesc] %>
+        </div>
+    </div>
+
+    
+    <div class="comp-hr-line-heading"></div>
+    <div class="group-comp-title"><%= labels[comp2.name] %></div>
+    <div class="comp-desc-text-group"></span><%= labels[comp2.desc] %><div>
+            <div class="display-flex-group" style="margin-left:<%=comp2.marginLeftGroup%>">
+                <div>
+                    <div class="group-box-score"> <%= comp2.score %></div>
+                    <div class="group-line"></div>
+                </div>
+                <div class="group-comp"><%= labels['label_group_score_title'] %></div>
+            </div>
+    
+            <div class="comp-score-box-outer">
+                <div class="comp-score-box-inner" style="width:<%=comp2.width%>"></div>
+            </div>
+            <div class="display-flex-benchmark" style="margin-left:<%=comp2.marginLeftUniverse%>">
+                <div>   
+                    <div class="benchmark-line"></div>
+                    <div class="benchmark-box-score"><%= comp2.universe %></div>
+                </div>
+                <div class="benchmark-comp"><%= labels['label_benchmark_score_title'] %></div>
+            </div>
+        </div>
+
+    <div class="group-comp-insight-box">
+        <div class="comp-insight-text-box-competency">
+            <%
+                color='';
+                label='label_comp_novice';
+                if(comp2.score <= 2) {
+                    color='#A01313';
+                    label='label_comp_novice';
+                } else if(comp2.score <= 4) {
+                    color='#EB8822';
+                    label='label_comp_emerging';
+                } else if(comp2.score <= 6) {
+                    color='#F3D70A';
+                    label='label_comp_competent';
+                } else if(comp2.score <= 8) {
+                    color='#6DC75D';
+                    label='label_comp_proficient';
+                } else {
+                    color='#1C9443';
+                    label='label_comp_rolemodel';
+                }
+            %>
+
+            <div class="comp-score-label" style="background-color: <%=color%>;"><%= labels[label]%></div>
+            <!-- <img class="comp-insight-img" src="https://knolskape-website.s3.amazonaws.com/misc/suyog_patil/2019/06/25/9/insights.png"></img> -->
+            <!-- <div class="comp-insight-label"><%= labels['label_group_competency_insight_label'] %>!</div> -->
+        </div>
+        <div class="comp-insight-text-box">
+            <%= labels[comp2.gradeDesc] %>
+        </div>
+    </div>
+</section>

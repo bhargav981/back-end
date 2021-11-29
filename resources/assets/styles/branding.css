@@ -1,0 +1,140 @@
+.social-container {
+    bottom: 10px;
+    width: 100%;
+    /* padding: 0 40px; */
+    box-sizing: border-box;
+}
+
+.saying-container {
+    margin-top: 20px;
+    width: 100%;
+    height: 100px;
+    box-sizing: border-box;
+}
+
+.quote-image {
+    width: 100%;
+    height: 100%;
+}
+
+.social-links-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 20px;
+    /* background: black; */
+}
+
+.copyright-container {
+    font-family: 'Open Sans';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+}
+
+.social-link-logo {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+    opacity: 0.8;
+}
+
+.contact-share-link {
+    font-family: 'Open Sans';
+    color: #2196f3;
+    /* font-size: 12px; */
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    letter-spacing: 0.3px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+/**************************************/
+/*********** About Knolskape Page *************/
+/**************************************/
+
+.about-knolskape-products-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+
+.product-box-container {
+    width: 260px;
+    height: 200px;
+    border-radius: 9px;
+    box-shadow: 2px 2px 7px 0px rgba(0, 0, 0, 0.5);
+    background-color: #ffffff;
+    box-sizing: border-box;
+    padding: 15px 12px 0 12px;
+    margin-top: 12px;
+}
+
+.product-title-demo-container {
+    font-size: 16px;
+    font-weight: 800;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #2e344b;
+    width: 100%;
+    height: 40%;
+}
+
+.product-name-demo-box {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.product-demo-button {
+    margin-top: 9px;
+    width: 82px;
+    height: 24px;
+    border-radius: 4px;
+    background-color: #0c243c;
+    box-shadow: 2px 2px 7px 0px rgba(12, 36, 60, 0.7);
+    font-family: 'Open Sans';
+    font-size: 11px;
+    text-decoration: none;
+    /* opacity: 0.6; */
+    font-weight: 500;
+    line-height: 1.17;
+    letter-spacing: normal;
+    color: white;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-image-container {
+    position: absolute;
+    top: -3px;
+    right: 0;
+    width: 78px;
+    height: 78px;
+}
+
+.product-desc-box {
+    width: 100%;
+    height: 60%;
+    font-family: 'Open Sans';
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.7;
+    letter-spacing: normal;
+    color: rgba(46, 52, 75, 0.7);
+}
+
+a{
+    color: #ffffff;
+    text-decoration: none;
+}

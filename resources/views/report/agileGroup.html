@@ -1,0 +1,267 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Group Report</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-9" />
+
+		<!-- fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+
+		<!-- styles -->
+		<link rel="stylesheet" href="<%=appUrl%>/assets/styles/report.css">
+		<link rel="stylesheet" href="<%=appUrl%>/assets/styles/branding.css">
+		<link rel="stylesheet" href="<%=appUrl%>/assets/styles/pageStyles.css">
+		<link rel="stylesheet" href="<%=appUrl%>/assets/styles/templateStyles.css">
+		<link rel="stylesheet" href="<%=appUrl%>/assets/styles/groupReport.css">
+
+		<!-- Local css file -->
+		<link rel="stylesheet" href="/assets/styles/report.css" />
+		<link rel="stylesheet" href="/assets/styles/branding.css" />
+		<link rel="stylesheet" href="/assets/styles/pageStyles.css" />
+		<link rel="stylesheet" href="/assets/styles/templateStyles.css" />
+		<link rel="stylesheet" href="/assets/styles/groupReport.css" />
+
+		<!-- Include chart js -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.6.0"></script>
+		<script>
+			Chart.plugins.unregister(ChartDataLabels);
+		</script>
+
+	</head>
+
+	<body>
+
+		<% let products = json.knolskapeProducts %>
+		<% let labels = json.labels %>
+		<% let lang = json.lang %>
+		<% let groupData = json.groupData %>
+		<% let competenciesData = json.competencies%>
+		
+		<% let comp1 = json.competencies[0]%>
+		<% let comp2 = json.competencies[1]%>
+		<% let comp3 = json.competencies[2]%>
+		<% let comp4 = json.competencies[3]%>
+
+		<% let pa = json.pa%>
+		<% let skill = json.skill%>
+		<% let morale = json.morale%>
+		<% let cs = json.cs%>
+
+		<% let grades = json.compGrades%>
+
+		<% let otherMetricsData = json.otherMetricsData%>
+
+		<%- include('groupReport/pages/introduction.html', {
+			labels,
+			groupData
+		}) %> 
+
+		<div class="page-breaker"></div>
+		<% let pageNumber=2 %>
+		
+		<!-- Disclaimer page -->
+		<div class="keeptogether position-relative">
+			<%- include('groupReport/pages/disclaimer.html', {
+				labels
+			}) %> 
+			<%- include('commonItems/footer.html', {
+				pageNumber, labels
+			}) %>
+		</div>
+
+		
+		<!-- About sim and report page -->
+		<div class="page-breaker"></div>
+		<% pageNumber+=1 %>
+		<div class="keeptogether position-relative">
+			<% let aboutData = json.about %>
+			<%- include('groupReport/pages/about.html', {
+				labels
+			}) %> 
+			<%- include('commonItems/footer.html', {
+				pageNumber, labels	
+			}) %>
+		</div>
+		
+
+		<div class="page-breaker"></div>
+		<!-- Agilescore report page -->
+		<% pageNumber+=1 %>
+		<div class="keeptogether position-relative">
+			<% let agile = json.agile %>
+			<%- include('groupReport/pages/agileScore.html', {
+				labels,
+				agile,
+				competenciesData
+			}) %> 
+			<%- include('commonItems/footer.html', {
+				pageNumber, labels	
+			}) %>
+		</div>
+	
+		<div class="page-breaker"></div>
+
+
+		<!-- Objectives page 1 -->
+		<% pageNumber+=1 %>
+		<div class="keeptogether position-relative">
+			<%- include('groupReport/pages/objectives.html', {
+				labels,
+				pa
+			}) %> 
+			<%- include('commonItems/footer.html', {
+				pageNumber, labels	
+			}) %>
+		</div>
+	
+		<div class="page-breaker"></div>
+
+
+		<!-- Objectives page 2 -->
+		<% pageNumber+=1 %>
+		<div class="keeptogether position-relative">
+			<%- include('groupReport/pages/skillObjectives.html', {
+				labels,
+				skill,
+				morale,
+				cs
+			}) %> 
+			<%- include('commonItems/footer.html', {
+				pageNumber, labels	
+			}) %>
+		</div>
+	
+		<div class="page-breaker"></div>
+
+
+		<!-- Objectives page 3 -->
+		<% pageNumber+=1 %>
+		<div class="keeptogether position-relative">
+			<%- include('groupReport/pages/storyObjectives.html', {
+				labels,
+				otherMetricsData
+			}) %> 
+			<%- include('commonItems/footer.html', {
+				pageNumber, labels	
+			}) %>
+		</div>
+	
+		<div class="page-breaker"></div>
+
+	
+		<div class="page-breaker"></div>
+
+		<!-- page 4-->
+		<% pageNumber+=1 %>
+		<div style="padding: 20px;padding-top: 15px;" class="keeptogether position-relative">
+			<%- include('groupReport/pages/compInsight.html', {
+				labels,
+				comp1,
+				comp2,
+				pageDesc: 'true',
+				agile
+			}) %> 
+			<%- include('commonItems/footer.html', {
+				pageNumber, labels	
+			}) %>
+		</div>
+		<div class="page-breaker"></div>
+		
+
+		<% pageNumber+=1 %>
+		<div style="padding: 20px;padding-top: 15px;" class="keeptogether position-relative">
+			<%- include('groupReport/pages/compInsight.html', {
+				labels,
+				comp1: comp3,
+				comp2: comp4,
+				pageDesc: 'false',
+				agile
+			}) %> 
+			<%- include('commonItems/footer.html', {
+				pageNumber, labels	
+			}) %>
+		</div>
+		<div class="page-breaker"></div>
+
+		<!-- page 4-->
+		<% pageNumber+=1 %>
+		<div class="keeptogether position-relative">
+			<%- include('groupReport/pages/compSpread.html', {
+				labels,
+				grades,
+				competencies: competenciesData
+			}) %> 
+			<%- include('commonItems/footer.html', {
+				pageNumber, labels	
+			}) %>
+		</div>
+		
+
+		<% pageNumber+=1 %>
+		<div class="keeptogether position-relative">
+				<%- include('groupReport/pages/compKeyTakeaways.html', {
+					labels,
+					comp: comp1
+				}) %> 
+				<%- include('commonItems/footer.html', {
+					pageNumber, labels	
+				}) %>
+			</div>
+		<div class="page-breaker"></div>
+		
+
+		<% pageNumber+=1 %>
+		<div class="keeptogether position-relative">
+				<%- include('groupReport/pages/compKeyTakeaways1.html', {
+					labels,
+					comp: comp2
+				}) %> 
+				<%- include('commonItems/footer.html', {
+					pageNumber, labels	
+				}) %>
+			</div>
+		<div class="page-breaker"></div>
+		
+
+		<% pageNumber+=1 %>
+		<div class="keeptogether position-relative">
+				<%- include('groupReport/pages/compKeyTakeaways1.html', {
+					labels,
+					comp: comp3
+				}) %> 
+				<%- include('commonItems/footer.html', {
+					pageNumber, labels	
+				}) %>
+			</div>
+		<div class="page-breaker"></div>
+		
+
+		<% pageNumber+=1 %>
+		<div class="keeptogether position-relative">
+				<%- include('groupReport/pages/compKeyTakeaways1.html', {
+					labels,
+					comp: comp4
+				}) %> 
+				<%- include('commonItems/footer.html', {
+					pageNumber, labels	
+				}) %>
+			</div>
+		<div class="page-breaker"></div>
+		
+
+		<% pageNumber+=1 %>
+		<div class="keeptogether position-relative">
+			<%- include('pages/branding1.html', {products, labels}) %>
+		</div>
+
+		<div class="page-breaker"></div>
+
+		<div class="keeptogether position-relative">
+			<%- include('pages/branding2.html', {products, labels, lang}) %>
+		</div>
+		
+	</body>
+</html>

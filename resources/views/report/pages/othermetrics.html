@@ -1,0 +1,336 @@
+<!-- Setting up data for the graph -->
+<%
+	let graph1Data = othermetricsData.graph1.graphData;
+    let graph21Data = othermetricsData.graph2.skillData;
+    let graph22Data = othermetricsData.graph2.moraleData;
+
+	let xAxisLabels1 = [];
+    let data1 = [];
+    let yAxisScaleLabel1 = labels[othermetricsData.graph1.graphAxisLabels.find(p=>p.axis==='Y').name]
+    let xAxisScaleLabel1 = labels[othermetricsData.graph1.graphAxisLabels.find(p=>p.axis==='X').name]
+
+    for(let i=0;i< graph1Data.length;i++) {
+        xAxisLabels1.push(i);
+        data1.push(graph1Data[i])   
+    }
+
+    let xAxisLabels2 = [];
+    let data21 = [];
+    let data22 = [];
+    let yAxisScaleLabel2 = labels[othermetricsData.graph2.graphAxisLabels.find(p=>p.axis==='Y').name]
+    let xAxisScaleLabel2 = labels[othermetricsData.graph2.graphAxisLabels.find(p=>p.axis==='X').name]
+
+    for(let i=0;i< graph21Data.length;i++) {
+        xAxisLabels2.push(i);
+        data21.push(graph21Data[i])
+        data22.push(graph22Data[i])
+    }
+%>
+
+<section class="container">
+    <div class="heading">
+        <%= labels[othermetricsData.title] %>
+    </div>
+    <div class="hr-line-heading"></div>
+    <div class="other-metrics-graph-list">
+        <div class="other-metrics-graph-container">
+            <div class="graph-header"><%= labels[othermetricsData.graph1.name] %></div>
+            <div class="hr-line-graph-header"></div>
+            <div class="graph-desc"><%= labels[othermetricsData.graph1.desc] %></div>
+            <div class="graph-1">
+                <canvas id="graph1" width="250" height="140">
+            </div>
+        </div>
+        <div class="other-metrics-graph-container">
+            <div class="graph-header"><%= labels[othermetricsData.graph2.name] %></div>
+            <div class="hr-line-graph-header"></div>
+            <div class="graph-desc"><%= labels[othermetricsData.graph2.desc] %></div>
+            <div class="graph-1">
+                <canvas id="graph2" width="250" height="140">
+            </div>
+            <div class="graph-legends">
+                <div class="metrics-progress-bar-label graph-legend-1">
+                    <div class="metrics-progress-bar-legend-color legend-1"></div>
+                    <div class="metrics-progress-bar-legend-text"><%= labels['label_team_skill'] %></div>
+                </div>
+                <div class="metrics-progress-bar-label">
+                    <div class="metrics-progress-bar-legend-color legend-2"></div>
+                    <div class="metrics-progress-bar-legend-text"><%= labels['label_group_team_morale_title'] %></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hr-line-divider"></div>
+    <div class="metrics-with-progress-bar">
+        <div class="graph-header"><%= labels[othermetricsData.progressBar.name] %></div>
+        <div class="hr-line-graph-header"></div>
+        <div class="graph-desc"><%= labels[othermetricsData.progressBar.desc] %></div>
+        <div class="metrics-progress-bar-box">
+            <% 
+                let total = othermetricsData.progressBar.completed+othermetricsData.progressBar.inProgress+othermetricsData.progressBar.notStarted
+                let completedBarLength =  275*othermetricsData.progressBar.completed/total;
+                let inProgressBarLength =  275*othermetricsData.progressBar.inProgress/total;    
+                let notStartedLength =  275*othermetricsData.progressBar.notStarted/total;
+            %>
+            <div class="metrics-progress-bar-bg">
+                <div class="metrics-progress-completed" style="width:<%=completedBarLength%>"></div>
+                <div class="metrics-progress-inprogress" style="width:<%=inProgressBarLength%>; left:<%=completedBarLength%>"></div>
+                <div class="metrics-value metrics-tasks-completed-value" style="left:<%=(-20+(completedBarLength/2))%>px;">
+                    <%=othermetricsData.progressBar.completed%>
+                </div>
+                <div class="metrics-value metrics-tasks-inprogress-value" style="left:<%=-2+completedBarLength+(inProgressBarLength/2)%>">
+                    <%=othermetricsData.progressBar.inProgress%>
+                </div>
+                <div class="metrics-value metrics-tasks-not-started-value" style="left:<%=10+completedBarLength+inProgressBarLength+(notStartedLength/2)%>">
+                    <%=othermetricsData.progressBar.notStarted%>
+                </div>
+            </div>
+            <div class="metrics-progress-bar-name"><%=total%>&nbsp<%=labels[othermetricsData.progressBar.totalTasksText]%></div>
+            <div class="metrics-progress-bar-label-list">
+                <div class="metrics-progress-bar-label">
+                    <div class="metrics-progress-bar-legend-color legend-1"></div>
+                    <div class="metrics-progress-bar-legend-text"><%=labels[othermetricsData.progressBar.completedLabel]%></div>
+                </div>
+                <div class="metrics-progress-bar-label">
+                    <div class="metrics-progress-bar-legend-color legend-2"></div>
+                    <div class="metrics-progress-bar-legend-text"><%=labels[othermetricsData.progressBar.inProgressLabel]%></div>
+                </div>
+                <div class="metrics-progress-bar-label">
+                    <div class="metrics-progress-bar-legend-color legend-3"></div>
+                    <div class="metrics-progress-bar-legend-text"><%=labels[othermetricsData.progressBar.notStartedLabel]%></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="metrics-with-single-score-list">
+        <% for(let i=0;i < othermetricsData.metricsWithSingleValue.length;i++) {%>
+            <div class="metrics-score-container">
+                <div class="metric-value"><%=othermetricsData.metricsWithSingleValue[i].value%></div>
+                <div class="metric-name"><%=labels[othermetricsData.metricsWithSingleValue[i].name]%></div>
+                <div class="metric-desc"><%=labels[othermetricsData.metricsWithSingleValue[i].description]%></div>
+            </div>
+        <% } %>
+    </div>
+</section>
+
+<!-- Code for graph 1 -->
+<script>
+	var defaultTicks = {
+		fontColor: 'rgba(0, 0, 0, 0.7)',
+		fontFamily: 'Open Sans',
+		fontSize: 10
+    };
+
+	var xAxisLabels1 = <%-JSON.stringify(xAxisLabels1);%>;
+    var data1 = <%-JSON.stringify(data1);%>;
+    var yAxisScaleLabel1 = <%-JSON.stringify(yAxisScaleLabel1);%>;
+    var xAxisScaleLabel1 = <%-JSON.stringify(xAxisScaleLabel1);%>;
+
+    var ctx = document.getElementById('graph1').getContext('2d');
+
+    //adding gradient
+    var gradient = ctx.createLinearGradient(0, 0, 0, 120);
+    gradient.addColorStop(0, 'rgba(66, 186, 255, 0.8)');
+    gradient.addColorStop(1, 'rgba(66, 186, 255, 0)');
+
+	var myChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: xAxisLabels1,
+			datasets: [{
+                data: data1,
+                backgroundColor: gradient,
+				fill: 'origin',
+				lineTension: 0,
+				borderColor: 'rgba(66, 186, 255, 1)',
+				borderWidth: '2'
+			}]
+        },
+        
+		options: {
+			legend: {
+				display: false
+            },
+            elements: {
+                point:{
+                    radius: 0
+                }
+            },
+			scales: {
+				yAxes: [{
+					ticks: {
+						...defaultTicks,
+						suggestedMin: 0,
+						suggestedMax: 100,
+						stepSize: 20,
+						padding: 1,
+						callback: function (value, index, values) {
+							return value + '%';
+						}
+					},
+					gridLines: {
+						color: 'rgba(0, 0, 0, 0.06)',
+						zeroLineColor: 'rgba(0, 0, 0, 0.06)',
+						drawBorder: false
+					},
+					scaleLabel: {
+						display: true,
+						labelString: yAxisScaleLabel1,
+                        fontColor: '#031a20CC',
+						fontFamily: 'Open Sans',
+                        fontStyle:600,
+						fontSize: 10,
+						padding: {
+							bottom: 10
+						}
+					}
+				}],
+				xAxes: [{
+					ticks: {
+						...defaultTicks,
+						callback: function (value, index, values) {
+							if (value == '0') {
+								return '';
+							}
+							return value;
+						}
+					},
+					gridLines: {
+						display: true,
+						color: 'rgba(0, 0, 0, 0.06)',
+						zeroLineColor: 'white'
+					},
+					scaleLabel: {
+						display: true,
+						labelString: xAxisScaleLabel1,
+                        fontColor: '#031a20CC',
+						fontFamily: 'Open Sans',
+                        fontSize: 10,
+                        fontStyle:600,
+						padding: {
+							bottom: 10
+						}
+					}
+				}],
+			}
+		}
+	});
+</script>
+
+<!-- Code for graph 2 -->
+<script>
+	var defaultTicks = {
+		fontColor: 'rgba(0, 0, 0, 0.7)',
+		fontFamily: 'Open Sans',
+		fontSize: 10
+    };
+
+	var xAxisLabels2 = <%-JSON.stringify(xAxisLabels2);%>;
+    var data21 = <%-JSON.stringify(data21);%>;
+    var data22 = <%-JSON.stringify(data22);%>;
+    var yAxisScaleLabel2 = <%-JSON.stringify(yAxisScaleLabel2);%>;
+    var xAxisScaleLabel2 = <%-JSON.stringify(xAxisScaleLabel2);%>;
+
+    var ctx = document.getElementById('graph2').getContext('2d');
+
+    //adding gradient
+    var gradient1 = ctx.createLinearGradient(0, 0, 0, 120);
+    gradient1.addColorStop(0, 'rgba(66, 186, 255, 0.8)');
+    gradient1.addColorStop(1, 'rgba(66, 186, 255, 0)');
+    var gradient2 = ctx.createLinearGradient(0, 0, 0, 120);
+    gradient2.addColorStop(0, 'rgba(255, 30, 80, 0.8)');
+    gradient2.addColorStop(1, 'rgba(255, 30, 80, 0)');
+
+	var myChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: xAxisLabels2,
+			datasets: [
+                {
+                data: data21,
+                backgroundColor: gradient1,
+				fill: 'origin',
+				lineTension: 0,
+				borderColor: 'rgba(66, 186, 255, 1)',
+				borderWidth: '2'
+            },
+            {
+                data: data22,
+                backgroundColor: gradient2,
+				fill: 'origin',
+				lineTension: 0,
+				borderColor: 'rgba(255, 30, 80, 1)',
+				borderWidth: '2'
+			}
+        ]
+        },
+        
+		options: {
+			legend: {
+				display: false
+            },
+            elements: {
+                point:{
+                    radius: 0
+                }
+            },
+			scales: {
+				yAxes: [{
+					ticks: {
+						...defaultTicks,
+						suggestedMin: 0,
+						suggestedMax: 100,
+						stepSize: 20,
+						padding: 1,
+						callback: function (value, index, values) {
+							return value + '%';
+						}
+					},
+					gridLines: {
+						color: 'rgba(0, 0, 0, 0.06)',
+						zeroLineColor: 'rgba(0, 0, 0, 0.06)',
+						drawBorder: false
+					},
+					scaleLabel: {
+						display: true,
+						labelString: yAxisScaleLabel2,
+                        fontColor: '#031a20CC',
+						fontFamily: 'Open Sans',
+                        fontStyle:600,
+						fontSize: 10,
+						padding: {
+							bottom: 10
+						}
+					}
+				}],
+				xAxes: [{
+					ticks: {
+						...defaultTicks,
+						callback: function (value, index, values) {
+                            if (value == '0') {
+								return '';
+							}
+							return value;
+						}
+					},
+					gridLines: {
+						display: true,
+						color: 'rgba(0, 0, 0, 0.06)',
+						zeroLineColor: 'white'
+					},
+					scaleLabel: {
+						display: true,
+						labelString: xAxisScaleLabel2,
+                        fontColor: '#031a20CC',
+						fontFamily: 'Open Sans',
+                        fontSize: 10,
+                        fontStyle:600,
+						padding: {
+							bottom: 10
+						}
+					}
+				}],
+			}
+		}
+	});
+</script>

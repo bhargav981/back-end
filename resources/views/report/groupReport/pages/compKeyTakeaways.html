@@ -1,0 +1,40 @@
+<section class="container competency-container">
+
+    <div class="competency-heading-group">
+        <div><%= labels['label_group_comp_keytakeaways'] %></div>
+    </div>
+
+
+    <div class="comp-hr-line-heading"></div>
+    <div class="competency-details">
+        <div class="competency-desc"><%=labels['label_group_key_takeaways_desc']%></div>
+    </div>
+    <div class="hr-line-divider"></div>
+
+
+    <div class="group-comp-title"><%= labels[comp.name] %></div>
+    <div class="comp-desc-text-group"><%= labels[comp.keytakeways.title] %></div>
+
+
+    <div class="competency-points">
+        <% for(let i=0;i< comp.keytakeways.points.length;i++) { %>
+            <div class="competency-points-header-group">
+                <span class="competency-points-number">#<%=i+1%></span>
+                <%= labels[comp.keytakeways.points[i].desc] %>
+            </div>
+
+        <% } %>    
+    </div>
+
+
+    <div class="group-comp-insight-box">
+        <div class="comp-insight-img-box">
+            <img class="comp-insight-img" src="https://knolskape-website.s3.amazonaws.com/misc/suyog_patil/2019/06/25/9/insights.png"></img>
+            <div class="comp-insight-label"><%= labels['label_group_takeaways_static_insight_title'] %></div>
+        </div>
+        <div class="comp-insight-text-box">
+            <%= labels[comp.keytakeways.staticInsight] %>
+        </div>
+    </div>
+   
+</section>

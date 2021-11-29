@@ -1,0 +1,2 @@
+FROM asia.gcr.io/knol-preprod/agile-api-app-preprod:18
+COPY .env /usr/app/.env

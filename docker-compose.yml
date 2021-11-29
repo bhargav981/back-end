@@ -1,0 +1,49 @@
+version: '3'
+services:
+  agile_dbpostgres:
+    image: postgres:9.6
+    volumes:
+      - postgresagile:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"  
+    container_name: agile_dbpostgres
+    environment:
+      POSTGRES_USER: agile_user
+      POSTGRES_PASSWORD: knolly123
+  agile_api:
+    build:
+      dockerfile: dev.Dockerfile
+      context: ./
+      args:
+        ssh_prv_key: ${ssh_prv_key}
+    container_name: agile_api
+    # command: ["tail -f /dev/null"]
+    volumes:
+      - ./agile:/usr/app/agile
+      - ./app:/usr/app/app
+      - ./config:/usr/app/config
+      - ./logs:/usr/app/logs
+      - ./models:/usr/app/models
+      - ./resources:/usr/app/resources
+      - ./router:/usr/app/router
+    ports: 
+      - "3031:3000"
+    links:
+      - agile_dbpostgres
+      - agileredis
+    depends_on: 
+      - agile_dbpostgres
+      - agileredis
+  agileredis:
+    image: redis
+    container_name: agileredis
+    command: redis-server --requirepass ${SESSION_REDIS_PASSWORD}
+    ports: 
+      - "6379:6379"
+    environment:
+       - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+       - agileredis:/bitnami/redis/data
+volumes:
+  postgresagile:
+  agileredis:

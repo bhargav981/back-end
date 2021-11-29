@@ -1,0 +1,22 @@
+<section class="container">
+    <div class="heading">
+        <%= labels[keyTakeAwaysData.heading] %>
+    </div>
+    <div class="hr-line-heading"></div>
+    <div class="keytakeaway-sub-heading">
+        <%= labels['label_report_keytakeaway_subheading'] %>
+    </div>
+    <div class="hr-line-sub-heading"></div>
+    <div class="takeaways-list">
+        <% for (var i = 0; i < keyTakeAwaysData.points.length; i++) { %>
+            <div class="key-point">
+                <div class="bullet"></div>
+                <div><%= labels[keyTakeAwaysData.points[i]] %></div>
+            </div>
+        <% } %>
+    </div>
+    <img 
+        class="end-screen-image"
+        src="https://knolskape-website.s3.amazonaws.com/misc/suyog_patil/2019/06/19/8/key-takeways-img.png"
+    ></img>
+</section>

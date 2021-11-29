@@ -1,0 +1,97 @@
+<section class="container">
+    <div class="heading">
+        <%= labels[agile.agileLeaderTitle] %>
+    </div>
+    <div class="hr-line-heading"></div>
+    <div class="agile-leader-content-box">
+        <div class="agile-leader-content">
+            <div class="agile-leader-heading"><%= labels[agile.agileLeaderTitle] %></div>
+            <div class="hr-line-agile-leader-subheading"></div>
+            <div class="agile-leader-desc"><%= labels[agile.agileLeaderDesc] %></div>
+        </div>
+        <div class="agile-leader-score">
+            <div class="agile-leader-heading"><%= labels[agile.agileLeadershipScoreTitle] %></div>
+            <div class="hr-line-leader-score-subheading"></div>
+            <div class="agile-leader-score-details">
+                <img class="agile-leader-score-img" src="https://knolskape-website.s3.amazonaws.com/misc/suyog_patil/2019/06/20/20/ellipse-for-score.png" alt="score">
+                <div class="agile-leader-self-score"><%= agile.agileLeadershipScore %></div>
+                <div class="agile-leader-total-score">/10</div>
+            </div>
+        </div>
+    </div>
+    <div class="grade-scale">
+        <div class="grade-names">
+            <% for (var i = 0; i < agile.gradeNames.length; i++) { %>
+                <div class="grade-name">
+                    <div class="grade-icon level-<%= i %>"><%= labels[agile.gradeNames[i][0]] %></div>
+                    <div class="grade-text"><%= labels[agile.gradeNames[i]] %></div>
+                </div>
+            <% } %>
+        </div>
+
+        <div class="universe-line" style="border-bottom-color: #B2CF33;margin-left:<%=agile.marginLeftUniverse%>"></div>
+        <div class="agile-universe-score" style="margin-left:calc(<%=agile.marginLeftUniverse%> + 35px)"><%= agile.universe %></div>        
+        <div class="group-universe-line" style="border-bottom-color: #A11513;margin-left:<%=agile.marginLeftGroup%>"></div>
+        <div class="agile-group-universe-score" style="margin-left:calc(<%=agile.marginLeftGroup%> - 12px)"><%= agile.agileLeadershipScore %></div>        
+
+
+        <!-- <img src="https://knolskape-website.s3.amazonaws.com/misc/suyog_patil/2019/07/04/61/grade-bar.png"></img> -->
+        <div class="sten-scale"></div>
+        <div class="grades-box-container">
+            <div style="display: flex;align-items: center;">
+                <div class="grade-box" style="background-color: #A11513"></div>
+                <div class="grade-box-text"><%=labels['label_group_score_title']%></div>
+            </div>
+            <!-- <div class="spacing"></div> -->
+            <div style="display: flex;align-items: center;">
+                <div class="grade-box" style="background-color: #B2CF33"></div>
+                <div class="grade-box-text"><%=labels['label_report_benchmark']%></div>
+            </div>
+                  
+        </div>
+    </div>
+    <div class="message-text"><%= labels['label_group_vs_universe_desc'] %></div>
+    <div class="group-message-container">
+        <div class="group-message-text-box">
+            <div class="group-message-grade"><%= labels[agile.agileLeadershipGrade] %></div>
+            <div class="message-text"><%= labels[agile.agileLeadershipGradeDesc] %></div>
+        </div>
+    </div>
+    <div class="hr-line-divider"></div>
+    <div class="agile-leader-heading"><%= labels['label_report_agile_comp_title'] %></div>
+    <div class="hr-line-leader-score-subheading"></div>
+    <div class="competency-list">
+        <% 
+            let min = Math.min(4,competenciesData.length)
+            let color
+            for (var i = 0; i < min; i++) { 
+                if(competenciesData[i]) {   
+                    if(competenciesData[i].score <= 2) {
+                        color='#A01313'
+                    } else if(competenciesData[i].score <= 4) {
+                        color='#EB8822'
+                    } else if(competenciesData[i].score <= 6) {
+                        color='#F3D70A '
+                    } else if(competenciesData[i].score <= 8) {
+                        color='#6DC75D'
+                    } else {
+                        color='#1C9443'
+                    }
+        %>
+            <div class="competency">
+                <img class="competency-bookmark" src="https://knolskape-website.s3.amazonaws.com/misc/suyog_patil/2019/06/21/18/boookmark.png"></img>
+                <img class="competency-icon" src=<%=competenciesData[i].icon%>></img>
+                <div class="competency-score"><%= competenciesData[i].score %></div>
+                <div class="competency-score-progress-bar">
+                <%  for(var j=0;j< competenciesData[i].score;j++) { %>
+                    <div class="competency-progress-colored" style="background-color:<%=color%>"></div>
+                <% } %>
+                <%  for(var j=0;j< 10-competenciesData[i].score;j++) { %>
+                    <div class="competency-progress-normal"></div>
+                <% } %>
+                </div>
+                <div class="competency-name"><%= labels[competenciesData[i].name] %></div>
+            </div>
+        <% }} %>
+    </div>
+</section>

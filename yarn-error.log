@@ -1,0 +1,73 @@
+Arguments: 
+  /home/knolly/.nvm/versions/node/v8.10.0/bin/node /home/knolly/.yarn/bin/yarn.js
+
+PATH: 
+  /home/knolly/.yarn/bin:/home/knolly/.config/yarn/global/node_modules/.bin:/home/knolly/.nvm/versions/node/v8.10.0/bin:/home/knolly/bin:/home/knolly/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/knolly/Android/Sdk/tools:/home/knolly/Android/Sdk/platform-tools
+
+Yarn version: 
+  1.16.0
+
+Node version: 
+  8.10.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: https://tgz.pm2.io/gkt-1.0.0.tgz: Request failed "503 Service Unavailable"
+      at ResponseError.ExtendableBuiltin (/home/knolly/.yarn/lib/cli.js:696:66)
+      at new ResponseError (/home/knolly/.yarn/lib/cli.js:802:124)
+      at Request.<anonymous> (/home/knolly/.yarn/lib/cli.js:66161:16)
+      at emitOne (events.js:116:13)
+      at Request.emit (events.js:211:7)
+      at Request.module.exports.Request.onRequestResponse (/home/knolly/.yarn/lib/cli.js:130467:10)
+      at emitOne (events.js:116:13)
+      at ClientRequest.emit (events.js:211:7)
+      at HTTPParser.parserOnIncomingClient (_http_client.js:551:21)
+      at HTTPParser.parserOnHeadersComplete (_http_common.js:115:23)
+
+npm manifest: 
+  {
+    "name": "Agile-be",
+    "version": "1.0.0",
+    "main": "app.js",
+    "_moduleAliases": {
+      "@root": ".",
+      "@config": "./config",
+      "@router": "./router",
+      "@models": "./models",
+      "@app": "./app"
+    },
+    "repository": "git@code.knolskape.com:html/agile/back-end.git",
+    "author": "Sindhu Anandhakrishnan <sindhu.a@knolskape.com>",
+    "license": "PRIVATE",
+    "dependencies": {
+      "@koa/cors": "2",
+      "@sentry/node": "^5.2.0",
+      "dotenv": "^8.0.0",
+      "koa": "^2.6.2",
+      "koa-bodyparser": "^4.2.1",
+      "koa-router": "^7.4.0",
+      "koa-static": "^5.0.0",
+      "koa2-cors": "^2.0.6",
+      "module-alias": "^2.2.0",
+      "pg": "^7.7.1",
+      "pg-hstore": "^2.3.2",
+      "pm2": "^3.5.0",
+      "pretty-error": "^2.1.1",
+      "sequelize": "^4.42.0",
+      "sequelize-cli": "^5.4.0"
+    },
+    "scripts": {
+      "test": "test",
+      "start-dev": "redis-server --daemonize yes && ./node_modules/.bin/pm2 start ecosystem.config.js --only development && ./node_modules/.bin/pm2 logs",
+      "start-prod": "NODE_ENV=production pm2 start ecosystem.config.js --only production --no-daemon",
+      "lint": "./node_modules/.bin/eslint **/*.js"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

@@ -1,0 +1,53 @@
+<!-- Setting up data for the graph -->
+<section class="container">
+    <div class="heading">
+        <%= labels['label_group_agile_objectives_title'] %>
+    </div>
+    <div class="hr-line-heading"></div>
+    <div class="hr-line-divider"></div>
+    <div class="agile-leader-content">
+            <div class="agile-leader-heading"><%= labels['label_user_story_title_group'] %></div>
+            <div class="hr-line-agile-leader-subheading"></div>
+        </div>
+        
+    <div class="objective-details">
+        <%= labels['label_user_story_desc_group'] %>            
+    </div>
+    <div class="metrics-with-single-score-list-group">
+        <% for(let i=0;i < otherMetricsData.length;i++) {%>
+            <div class="metrics-score-container-group">
+                <div class="story-name-value">
+                    <div class="metric-value"><%=otherMetricsData[i].displayValue%></div>
+                    <div class="metric-name"><%=labels[otherMetricsData[i].name]%></div>
+                    <% if(i != 0 ) {%>
+                    <!-- <div class="objective-1-visual">
+                            <% let progressBarWidth=1.64*otherMetricsData[i].value; %>
+                            <div class="objective-1-background">
+                                <div class="objective-1-progress" style="width:<%=progressBarWidth%>px"></div>
+                                <div class="objective-1-progress-value" style="left:<%=progressBarWidth - 8 %>px"><%= otherMetricsData[i].displayValue %></div> 
+                                <div class="objective-1-progress-vr-line" style="left:<%=progressBarWidth%>px"></div>
+                                <div class="objective-1-target-text" style="right:-16px">100%</div> 
+                                <div class="objective-1-target-vr-line" style="right:0px"></div>
+                            </div>
+                    </div> -->
+                    <% } %>
+                </div>
+                <div class="low-medium-high-box" style="background-color: <%=otherMetricsData[i].color%>;"><%=labels[otherMetricsData[i].grade]%></div>
+                <div class="metric-desc display-center-text"><%=labels[otherMetricsData[i].description]%></div>
+            </div>
+        <% } %>
+    </div>
+
+    <div class="group-comp-insight-box">
+            <div class="comp-insight-img-box">
+                <img class="comp-insight-img" src="https://knolskape-website.s3.amazonaws.com/misc/suyog_patil/2019/06/25/9/insights.png"></img>
+                <div class="comp-insight-label"><%= labels['label_group_competency_insight_label'] %>!</div>
+            </div>
+            <div class="comp-insight-text-box">
+                <%= labels['label_group_vel_rel_eff_insight'] %>
+            </div>
+    </div>
+
+
+</section>
+

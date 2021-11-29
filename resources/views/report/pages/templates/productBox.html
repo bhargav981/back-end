@@ -1,0 +1,21 @@
+<div class="product-box-container">
+        <div class="product-title-demo-container display-flex">
+            <div class="product-name-demo-box">
+                <div>
+                    <%= descObj.name %>
+                </div>
+                <div class="product-demo-button">
+                    <a  href="https://www.knolskape.com/methodology/simulations/" target="_blank">
+                        <%= labels['label_demo_btn'] %>
+                    </a>
+                </div>
+                <div class="product-image-container">
+                    <img src=<%= descObj.image %> width="100%" height="100%" />
+                </div>
+            </div>
+        </div>
+        <div class="product-desc-box">
+            <%= descObj.desc %>
+        </div>
+    </div>
+    

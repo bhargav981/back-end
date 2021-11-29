@@ -1,0 +1,25 @@
+<section class="introduction-container">
+    <div class="title">
+        <div class="sim-name"><%= labels['label_report_sim_name'] %></div>
+        <div class="sim-report-text"><%= labels['label_report_sim_report'] %></div>
+    </div>
+	<div class="bottom-text">
+		<div class="user-name"><%= userData.userName %></div>
+		<%  var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth() + 1; //January is 0!
+			var yyyy = today.getFullYear();
+
+			if (dd < 10) {
+			dd = '0' + dd;
+			}
+
+			if (mm < 10) {
+			mm = '0' + mm;
+			}
+
+			today = dd + '.' + mm + '.' + yyyy;
+		%>
+		<div class="generated-on-text"><%= labels['label_report_generated_on'] %> : <%=today%></div>
+	</div>
+</section>

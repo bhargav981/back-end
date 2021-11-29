@@ -1,0 +1,71 @@
+<div class="vertical-graph-container">
+		<div class="y-axis-label"><%- labels[yAxisLabel]%></div>
+		<div class="vg-x-axis-line-container">
+			<%
+				for(var i = 0; i <= partitions; i++) {
+			%>
+					<% if(i == 0) {%>
+						<div class="vg-x-axis-line-full">
+							<div class="vg-x-axis-value"><%- minValue + (((maxValue - minValue)/partitions) * i)%>%</div>
+						</div>
+					<% } else { %>
+						<div class="vg-x-axis-line">
+							<div class="vg-x-axis-value"><%- minValue + (((maxValue - minValue)/partitions) * i)%>%</div>
+						</div>
+					<% } %>
+			<%
+				}
+			%>
+		</div>
+		<div class="vg-y-axis-container">
+			<%
+				var count = 0;
+				for(var i = 0; i < yAxisLabels.length; i++) {
+			%>
+				<% if(i == yAxisLabels.length - 1) {%>
+					<div
+						style="height: <%- (100 - count)%>%;background-color:<%=yAxisLabels[i].color%>;"
+						class="vg-single-bar"
+					>
+						<div class="vg-single-axis-value">
+							<div><%=yAxisLabels[i].value%></div>
+							<div>(<%=yAxisValues[i].legendValue%>)</div>
+						</div>
+						<!-- <div class="vg-single-bar-value"><%=(100 - count) < 0 ? 0 : (100 - count)  %>%</div> -->
+					</div>
+				<% } else {
+					var heightValue = yAxisValues[i].value;
+					count += heightValue;
+				%>
+					<div
+						style="height: <%=heightValue%>%;background-color: <%=yAxisLabels[i].color%>;"
+						class="vg-single-bar"
+					>
+						<div class="vg-single-axis-value">
+							<div><%=yAxisLabels[i].value%></div>
+							<div>(<%=yAxisValues[i].legendValue%>)</div>
+						</div>
+						<!-- <div class="vg-single-bar-value"><%=heightValue%>%</div> -->
+					</div>
+				<% } %>
+				
+			<%
+				}
+			%>
+		</div>
+	</div>
+
+	<!-- <div class="graph-titles">
+		<div class="x-axis-name-group"><%=xAxis%></div>
+		<div class="graph-grade">
+			<%
+				var count = 0;
+				for(var i = 0; i < yAxisLabels.length; i++) {
+			%>
+				
+				<div class="circle-small" style="background-color: <%=yAxisLabels[i].color%>;"></div>
+				<div class="circle-name"><%=yAxisLabels[i].value%></div>
+				
+			<% } %>
+		</div>
+	</div> -->

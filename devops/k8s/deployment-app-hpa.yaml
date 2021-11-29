@@ -1,0 +1,13 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: GCP_APP_NAME-preemptible-hpa
+  namespace: KUBE_NAMESPACE
+spec:
+  maxReplicas: KUBE_PREEMPTIBLE_MAX_CONTAINER
+  minReplicas: KUBE_PREEMPTIBLE_MIN_CONTAINER
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: GCP_APP_NAME-preemptible-deployment
+  targetCPUUtilizationPercentage: 70

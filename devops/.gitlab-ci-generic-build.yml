@@ -1,0 +1,42 @@
+.build_template:
+  before_script:
+    # Login to registry.knolskape.com as it is required to pull the packages from code.knolskape.com
+    # - docker login -u $GITLAB_DEPLOY_USERNAME -p $GITLAB_DEPLOY_TOKEN registry.knolskape.com
+    # Login to the GCR repository
+    - echo $GCP_DEPLOYER_SERVICE_ACCOUNT | base64 -d | docker login asia.gcr.io --username _json_key --password-stdin
+    - export SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN
+    - export SENTRY_ORG=$SENTRY_ORG
+    - export SENTRY_PROJECT=$SENTRY_PROJECT
+    - VERSION=$(sentry-cli releases propose-version)
+    # Preparing the env file
+    - |
+      if [ $BUILD_FOR_PROD == "true" ]; then 
+        echo "Building for prod"
+        echo $PREPROD_SERVICE_ACCOUNT | base64 -d > ${HOME}/gcloud-service-key.json
+        gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+        IMAGE_TAG=$(gcloud container images list-tags $PREPROD_REGISTRY_URL/$PREPROD_APP_NAME --format='get(tags)' --limit=1)
+        mkdir -p /tmp/gitlab-ci
+        cp devops/configs/prod_gcp_dockerfile /tmp/gitlab-ci/Dockerfile
+        sed -i "s/$PREPROD_APP_NAME:[0-9.]*/$PREPROD_APP_NAME:$IMAGE_TAG/g" /tmp/gitlab-ci/Dockerfile
+        echo $GCP_ENV_FILE | base64 -d > /tmp/gitlab-ci/.env
+        echo -e "\nSENTRY_RELEASE=$VERSION" >> /tmp/gitlab-ci/.env
+      else
+        echo $GCP_ENV_FILE | base64 -d > $CI_PROJECT_DIR/.env
+        echo -e "\nSENTRY_RELEASE=$VERSION" >> $CI_PROJECT_DIR/.env
+      fi
+    - sentry-cli releases new -p $SENTRY_PROJECT -p $SENTRY_PROJECT $VERSION
+    - sentry-cli releases set-commits --auto $VERSION
+    - sentry-cli releases new "$VERSION"
+    - sentry-cli releases finalize "$VERSION"
+  script:
+    - echo "Build Starts..."
+    - |
+      if [ $BUILD_FOR_PROD == "true" ]; then
+        echo $PREPROD_SERVICE_ACCOUNT | base64 -d | docker login asia.gcr.io --username _json_key --password-stdin
+        docker build -t $DESIRED_TAG_NAME --build-arg ssh_prv_key="$(cat $REPO_KEY)" --file=/tmp/gitlab-ci/Dockerfile /tmp/gitlab-ci
+        echo $GCP_DEPLOYER_SERVICE_ACCOUNT | base64 -d | docker login asia.gcr.io --username _json_key --password-stdin
+      else
+        docker build -t $DESIRED_TAG_NAME --build-arg ssh_prv_key="$(cat $REPO_KEY)" .
+      fi
+    - docker push $DESIRED_TAG_NAME
+    - echo "Image is Pushed to Registry"
